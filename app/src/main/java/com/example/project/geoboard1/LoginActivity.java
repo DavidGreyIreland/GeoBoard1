@@ -17,12 +17,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
-    Button buttonRegister;
+    Button buttonSignin;
     EditText editTextEmail;
     EditText editTextPassword;
-    TextView textViewSignin;
+    TextView textViewRegister;
     ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
 
@@ -30,47 +30,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
-        buttonRegister = (Button)findViewById(R.id.buttonRegister);
+        buttonSignin= (Button)findViewById(R.id.buttonSignin);
         editTextEmail = (EditText)findViewById(R.id.editTextEmail);
         editTextPassword = (EditText)findViewById(R.id.editTextPassword);
-        textViewSignin = (TextView)findViewById(R.id.textViewSignin);
+        textViewRegister = (TextView)findViewById(R.id.textViewRegister);
         progressDialog = new ProgressDialog(this);
 
-        buttonRegister.setOnClickListener(this);
-        textViewSignin.setOnClickListener(this);
+        buttonSignin.setOnClickListener(this);
+        textViewRegister.setOnClickListener(this);
 
         // initializes firebase object
         firebaseAuth = firebaseAuth.getInstance();
 
         if(firebaseAuth.getCurrentUser() != null)
         {
-            Toast.makeText(this, "came from MainActivity onCreate()", Toast.LENGTH_SHORT).show();
             finish();
             startActivity(new Intent(getApplication(), SecurityChoiceActivity.class));
         }
     }
 
-
     @Override
     public void onClick(View view)
     {
-        if(view == buttonRegister)
+        if(view == buttonSignin)
         {
-            registerUser();
+            userLogin();
         }
-        else
+        else if(view == textViewRegister)
         {
             finish();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
-    private void registerUser()
+    private void userLogin()
     {
         Toast.makeText(this, "button works", Toast.LENGTH_SHORT).show();
-
         // .trim() removes spaces in a string
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -89,25 +86,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         // if it passes both if statements, both email and password have been added
-        progressDialog.setMessage("Registering User....");
+        progressDialog.setMessage("Logging in User....");
         progressDialog.show();
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
+                        progressDialog.dismiss();
+
                         if(task.isSuccessful())
                         {
                             finish();
                             startActivity(new Intent(getApplication(), SecurityChoiceActivity.class));
-                            Toast.makeText(MainActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(MainActivity.this, "Registered Unsuccessfully", Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });
