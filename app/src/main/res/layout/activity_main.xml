@@ -11,10 +11,11 @@ tools:context="com.example.project.geoboard1.MainActivity">
 <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:srcCompat="@drawable/banner"
+    app:srcCompat="@drawable/banner1"
     android:id="@+id/imageView"
     android:layout_alignParentStart="true"
-    />
+    android:scaleType="fitStart"
+    android:contentDescription="@string/logo"/>
 
 <LinearLayout
     android:layout_centerHorizontal="true"
@@ -26,11 +27,9 @@ tools:context="com.example.project.geoboard1.MainActivity">
     android:layout_below="@+id/imageView">
 
     <TextView
-        android:text="User Registration"
+        android:text="@string/userRegistrationHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
         android:id="@+id/textView"
         android:textSize="24sp"
         android:layout_marginBottom="100dp"
@@ -39,20 +38,21 @@ tools:context="com.example.project.geoboard1.MainActivity">
 
     <EditText
         android:inputType="textEmailAddress"
-        android:hint="Enter your email"
+        android:hint="@string/editTextEmail"
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
 
     <EditText
         android:inputType="textPassword"
-        android:hint="Enter your password"
+        android:hint="@string/editTextPassword"
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
-        android:text="Register User"
+        android:text="@string/registerUserButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonRegister"
@@ -62,7 +62,7 @@ tools:context="com.example.project.geoboard1.MainActivity">
     <TextView
         android:id="@+id/textViewSignin"
         android:textAlignment="center"
-        android:text="Already Registered, sign in here!"
+        android:text="@string/signInHere"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_red_dark"
