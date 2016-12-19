@@ -1,12 +1,12 @@
 package com.example.project.geoboard1;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +16,14 @@ import com.google.firebase.auth.FirebaseUser;
 public class SecurityChoiceActivity extends AppCompatActivity implements View.OnClickListener
 {
     Button buttonLogout;
-    EditText editTextEmail;
-    EditText editTextPassword;
+    Button buttonSecurity;
     TextView textViewUserEmail;
-    ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
+
+
+    /***************************************************************************************/
+    /****************************** Security setting choices *******************************/
+    /***************************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -28,12 +31,11 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_security_choice);
 
         buttonLogout= (Button)findViewById(R.id.buttonLogout);
-        editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText)findViewById(R.id.editTextPassword);
+        buttonSecurity = (Button)findViewById(R.id.buttonSecurity);
         textViewUserEmail = (TextView)findViewById(R.id.textViewUserEmail);
-        progressDialog = new ProgressDialog(this);
 
         buttonLogout.setOnClickListener(this);
+        buttonSecurity.setOnClickListener(this);
 
         // initializes firebase object
         firebaseAuth = firebaseAuth.getInstance();
@@ -49,6 +51,10 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
         textViewUserEmail.setText("welcome " + user.getEmail());
     }
 
+
+    /***************************************************************************************/
+    /**************** Dealing with all the buttons clickedin this activity *****************/
+    /***************************************************************************************/
     @Override
     public void onClick(View view)
     {
@@ -60,6 +66,25 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             firebaseAuth.signOut();
             finish();
             startActivity(new Intent(this, MainActivity.class));
+        }
+
+        if(view == buttonSecurity)
+        {
+            RadioButton radioButton;
+            RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroupSecurityOptions);
+
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            radioButton = (RadioButton)findViewById(selectedId);
+            String radioButtonSecurityResult = radioButton.getText().toString();
+
+            Intent intent = new Intent(getApplication(), MapActivity.class);
+            intent.putExtra("SecurityOption", radioButtonSecurityResult);
+
+            if(getIntent().resolveActivity(getPackageManager()) != null)
+            {
+                finish();
+                startActivity(intent);
+            }
         }
     }
 }
