@@ -77,7 +77,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             radioButton = (RadioButton)findViewById(selectedId);
             String radioButtonSecurityResult = radioButton.getText().toString();
 
-            Intent intent = new Intent(getApplication(), MapActivity.class);
+            Intent intent = new Intent(getApplication(), MapsActivity.class);
             intent.putExtra("SecurityOption", radioButtonSecurityResult);
 
             if(getIntent().resolveActivity(getPackageManager()) != null)
