@@ -15,6 +15,8 @@
     <string name="textViewRegisterHere">Not registered yet? Register here!</string>
     <string name="userLoginHeader">User Login</string>
     <string name="loginButton">Login</string>
+    <string name="buttonCreateGeoBoard">Create Geo-Board</string>
+    <string name="buttonViewGeoBoard">View my Geo-boards</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

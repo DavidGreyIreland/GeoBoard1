@@ -1,8 +1,40 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:map="http://schemas.android.com/apk/res-auto"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/map"
-          android:name="com.google.android.gms.maps.SupportMapFragment"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          tools:context="com.example.project.geoboard1.MapsActivity"/>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.project.geoboard1.MapsActivity">
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.example.project.geoboard1.AppHeaderFragment"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment"
+        tools:layout="@layout/app_header"/>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="370dp"
+        android:layout_height="290dp"
+        tools:context="com.example.project.geoboard1.MapsActivity"
+        tools:layout="@layout/map_fragment"
+        android:layout_below="@+id/fragment"
+        android:layout_alignParentStart="true"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:name="com.example.project.geoboard1.MapOptionsFragment"
+        android:id="@+id/fragment3"
+        tools:layout="@layout/map_options_fragment"
+        android:layout_height="120dp"
+        android:layout_below="@+id/map"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="28dp"/>
+</LinearLayout>
+

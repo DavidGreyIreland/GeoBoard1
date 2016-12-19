@@ -8,25 +8,23 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.example.project.geoboard1.MainActivity">
 
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:srcCompat="@drawable/banner1"
-    android:id="@+id/imageView"
-    android:layout_alignParentStart="true"
-    android:scaleType="fitStart"
-    android:contentDescription="@string/logo"/>
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.example.project.geoboard1.AppHeaderFragment"
+        android:id="@+id/fragment7"
+        tools:layout="@layout/app_header"/>
 
-<LinearLayout
-    android:layout_centerHorizontal="true"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="40dp"
-    android:id="@+id/linearLayout"
-    android:layout_below="@+id/imageView">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/fragment7"
+        android:layout_alignParentStart="true">
 
-    <TextView
+        <TextView
         android:text="@string/userRegistrationHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
