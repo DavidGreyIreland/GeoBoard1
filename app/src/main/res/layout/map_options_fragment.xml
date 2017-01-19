@@ -8,17 +8,17 @@
         android:text="@string/buttonViewGeoBoard"
         android:layout_height="wrap_content"
         android:id="@+id/buttonViewGeoBoards"
-        android:layout_width="175dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/buttonCreateBoard"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp"
+        android:layout_width="200dp"/>
 
     <Button
         android:text="@string/buttonCreateGeoBoard"
         android:layout_height="wrap_content"
         android:id="@+id/buttonCreateBoard"
-        android:layout_width="175dp"
         android:layout_above="@+id/buttonViewGeoBoards"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"/>
 
 </RelativeLayout>

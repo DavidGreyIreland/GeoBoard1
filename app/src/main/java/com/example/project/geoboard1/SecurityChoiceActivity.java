@@ -53,7 +53,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
 
 
     /***************************************************************************************/
-    /**************** Dealing with all the buttons clickedin this activity *****************/
+    /**************** Dealing with all the buttons clicked in this activity *****************/
     /***************************************************************************************/
     @Override
     public void onClick(View view)
@@ -80,11 +80,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             Intent intent = new Intent(getApplication(), MapsActivity.class);
             intent.putExtra("SecurityOption", radioButtonSecurityResult);
 
-            if(getIntent().resolveActivity(getPackageManager()) != null)
-            {
-                finish();
-                startActivity(intent);
-            }
+            startActivity(intent);
         }
     }
 }

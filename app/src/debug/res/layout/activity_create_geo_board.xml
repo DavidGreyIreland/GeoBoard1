@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_create_geo_board"
+    tools:context="com.example.project.geoboard1.CreateGeoBoard"
+    app:layout_editor_absoluteX="0dp"
+    app:layout_editor_absoluteY="80dp"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="80dp"
+    android:layerType="none"
+    >
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:name="com.example.project.geoboard1.AppHeaderFragment"
+        android:layout_alignParentTop="true"
+        android:id="@+id/fragment5"
+        tools:layout="@layout/app_header"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/frameLayout"/>
+
+    <FrameLayout
+        android:background="@drawable/background_message_image"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="@+id/fragment5"
+        android:layout_marginTop="85dp"
+        android:layout_height="445dp">
+
+    </FrameLayout>
+
+    <TextView
+        android:text="@string/geoBoardTitleTextView"
+        android:layout_height="wrap_content"
+        android:id="@+id/geoBoardTitleTextView"
+        android:textColor="@color/cast_expanded_controller_background_color"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:layout_width="80dp"
+        app:layout_constraintLeft_toLeftOf="@+id/fragment5"
+        app:layout_constraintRight_toLeftOf="@+id/geoBoardTitleEditText"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="@+id/frameLayout"
+        android:layout_marginTop="24dp"/>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/geoBoardTitleEditText"
+        android:textSize="14sp"
+        tools:inputType="text|textCapSentences"
+        android:hint="@string/geoBoardTitleHint"
+        android:textAlignment="textStart"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frameLayout"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_width="250dp"
+        />
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/geoBoardSubjectEditText"
+        android:textSize="14sp"
+        tools:inputType="text|textCapSentences"
+        android:hint="@string/geoBoardSubjectHint"
+        android:textAlignment="textStart"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geoBoardTitleEditText"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_width="250dp"/>
+
+    <TextView
+        android:text="@string/geoBoardSubjectTextView"
+        android:layout_height="wrap_content"
+        android:id="@+id/geoBoardSubjectTextView"
+        android:textColor="@color/cast_expanded_controller_background_color"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintRight_toLeftOf="@+id/geoBoardSubjectEditText"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/geoBoardTitleTextView"
+        android:layout_marginEnd="8dp"
+        android:layout_width="80dp"
+        app:layout_constraintLeft_toLeftOf="@+id/fragment5"/>
+
+    <Button
+        android:text="@string/buttonCreateGeoBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/geoBoardCreateButton"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/geoBoardMessageTextArea"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:onClick="createGeoBoard"/>
+
+    <EditText
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/geoBoardMessageTextArea"
+        android:layout_height="250dp"
+        android:hint="@string/geoBoardMessageHint"
+        android:gravity="top|left"
+        app:layout_constraintTop_toBottomOf="@+id/geoBoardSubjectEditText"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
+        app:layout_constraintRight_toRightOf="@+id/frameLayout"
+        android:layout_marginStart="24dp"
+        android:layout_width="0dp"
+        android:layout_marginEnd="24dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

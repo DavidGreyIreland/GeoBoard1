@@ -1,6 +1,7 @@
 package com.example.project.geoboard1;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -31,8 +32,8 @@ public class MapOptionsFragment extends Fragment
                 new View.OnClickListener(){
                     public void onClick(View v)
                     {
-                        Toast.makeText(getActivity(), "create new Geo-Board", Toast.LENGTH_SHORT).show();
-
+                        Intent intent = new Intent(getActivity(), CreateGeoBoard.class);
+                        startActivity(intent);
                     }
                 }
         );

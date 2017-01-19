@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,15 +18,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener
 {
     double lat = 0.0;
     double lon = 0.0;
     Location location;
-
+    LatLng currentLocation;
     private GoogleMap mMap;
+    private Marker currentLocationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,10 +88,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
+
 
         try
         {
@@ -101,17 +106,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             ex.printStackTrace();
         }
-        LatLng currentLocation = new LatLng(lat, lon);
+        currentLocation = new LatLng(lat, lon);
         // mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.geoboardlogo2)));
-        mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
+        currentLocationMarker = mMap.addMarker(new MarkerOptions()
+                .position(currentLocation)
+                // TODO add all saved GeoBoards and use the drawable to the geoboardlogo2 image
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.person))
+                // TODO set the title to the title of the Geo-Board that represents that location
+                // TODO set the snippet with the about info of the Geo-Board set for this location
+                .title("GeoBoardTitle")
+                .snippet("Click to Open"));
+        currentLocationMarker.showInfoWindow();
+        mMap.setOnMarkerClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+    }
+
+    public double getLat()
+    {
+        return lat;
+    }
+
+    public double getLon()
+    {
+        return lon;
     }
 
     private void myLocation(Location location)
     {
         lat = location.getLatitude();
         lon = location.getLongitude();
+    }
+
+    // TODO two types of markers, the person marker shows where the user is walking, the Geo-Board marker shows available Geo-Boards
+    @Override
+    public boolean onMarkerClick(Marker marker)
+    {
+        if(marker.equals(currentLocationMarker))
+        {
+            // TODO set a startActivity() instead of the toast to start the creation of the Geo-Board
+            Toast.makeText(this, "you clicked this marker", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 }
 
