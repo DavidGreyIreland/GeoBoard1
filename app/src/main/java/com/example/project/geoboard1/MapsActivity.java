@@ -2,6 +2,7 @@ package com.example.project.geoboard1;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,12 +26,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener
 {
-    double lat = 0.0;
-    double lon = 0.0;
+    double lat;
+    double lon;
     Location location;
     LatLng currentLocation;
     private GoogleMap mMap;
     private Marker currentLocationMarker;
+    Button buttonCreateGeoBoard;
+    Button buttonViewGeoBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,6 +44,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        buttonCreateGeoBoard = (Button)findViewById(R.id.buttonCreateBoard);
+        buttonViewGeoBoard = (Button)findViewById(R.id.buttonViewGeoBoards);
+
+        buttonCreateGeoBoard.setOnClickListener(
+                new View.OnClickListener(){
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(getApplication(), CreateGeoBoard.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+
+        buttonViewGeoBoard.setOnClickListener(
+                new View.OnClickListener(){
+                    public void onClick(View v)
+                    {
+                        Toast.makeText(getApplication(), "view Geo-Boards", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     /**
@@ -54,11 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener()

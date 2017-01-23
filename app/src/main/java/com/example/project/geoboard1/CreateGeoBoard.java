@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -103,10 +102,10 @@ public class CreateGeoBoard extends AppCompatActivity
         String saveSubject = subject.getText().toString().trim();
         String saveMessage = message.getText().toString().trim();
 
-        UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
+        //FirebaseUser user = firebaseAuth.getCurrentUser();
+        //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
         Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
     }
 }

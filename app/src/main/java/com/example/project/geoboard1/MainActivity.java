@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             Toast.makeText(this, "came from MainActivity onCreate()", Toast.LENGTH_SHORT).show();
             finish();
-            startActivity(new Intent(getApplication(), SecurityChoiceActivity.class));
+            startActivity(new Intent(getApplication(), MapsActivity.class));
         }
     }
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(task.isSuccessful())
                         {
                             finish();
-                            startActivity(new Intent(getApplication(), MapOptionsFragment.class));
+                            startActivity(new Intent(getApplication(), MapsActivity.class));
                             Toast.makeText(MainActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                         }
                         else

@@ -1,3 +1,55 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.project.geoboard1.MapsActivity">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:map="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/map"
+              android:name="com.google.android.gms.maps.SupportMapFragment"
+              android:layout_width="match_parent"
+              tools:context="com.example.project.mappracticeproject.MapsActivity"
+              android:layout_height="520dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <Button
+            android:text="@string/buttonViewGeoBoard"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonViewGeoBoards"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="10dp"
+            tools:ignore="ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:text="@string/buttonCreateGeoBoard"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonCreateBoard"
+            android:layout_above="@+id/buttonViewGeoBoards"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            tools:ignore="ButtonStyle,ObsoleteLayoutParam"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+
+
+<!--
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,14 +60,14 @@
     android:orientation="vertical"
     tools:context="com.example.project.geoboard1.MapsActivity">
 
-<!--    <fragment
+&lt;!&ndash;    <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="com.example.project.geoboard1.AppHeaderFragment"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/fragment"
-        tools:layout="@layout/app_header"/>-->
+        tools:layout="@layout/app_header"/>&ndash;&gt;
 
     <fragment
         android:id="@+id/map"
@@ -36,4 +88,4 @@
         android:layout_below="@+id/map"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="28dp"/>
-</LinearLayout>
+</LinearLayout>-->
