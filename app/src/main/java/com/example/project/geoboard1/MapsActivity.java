@@ -34,7 +34,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker currentLocationMarker;
     Button buttonCreateGeoBoard;
     Button buttonViewGeoBoard;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -44,28 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        buttonCreateGeoBoard = (Button)findViewById(R.id.buttonCreateBoard);
-        buttonViewGeoBoard = (Button)findViewById(R.id.buttonViewGeoBoards);
-
-        buttonCreateGeoBoard.setOnClickListener(
-                new View.OnClickListener(){
-                    public void onClick(View v)
-                    {
-                        Intent intent = new Intent(getApplication(), CreateGeoBoard.class);
-                        startActivity(intent);
-                    }
-                }
-        );
-
-        buttonViewGeoBoard.setOnClickListener(
-                new View.OnClickListener(){
-                    public void onClick(View v)
-                    {
-                        Toast.makeText(getApplication(), "view Geo-Boards", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
     }
 
     /**
@@ -122,13 +99,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-            lat = location.getLatitude();
-            lon = location.getLongitude();
+            setLat(location.getLatitude());
+            setLon(location.getLongitude());
         } catch(SecurityException ex)
         {
             ex.printStackTrace();
         }
-        currentLocation = new LatLng(lat, lon);
+        currentLocation = new LatLng(getLat(), getLon());
         // mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.geoboardlogo2)));
         currentLocationMarker = mMap.addMarker(new MarkerOptions()
                 .position(currentLocation)
@@ -149,9 +126,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return lat;
     }
 
+    public void setLat(double lat)
+    {
+        this.lat = lat;
+    }
+
     public double getLon()
     {
         return lon;
+    }
+
+    public void setLon(double lon)
+    {
+        this.lon = lon;
     }
 
     private void myLocation(Location location)
@@ -171,12 +158,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return false;
     }
+
+    public void viewGeoBoard(View v)
+    {
+        Toast.makeText(this, "view button works", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void createGeoBoard(View v)
+    {
+        startActivity(new Intent(getApplication(), CreateGeoBoard.class));
+    }
 }
 
-
-/*
-    String resultName = getIntent().getExtras().getString("SecurityOption");
-    String resultThanks = "Security choice: " + resultName;
-    TextView result = (TextView)findViewById(R.id.result);
-    result.setText(resultThanks);
-*/
