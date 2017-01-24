@@ -14,6 +14,20 @@
     android:layerType="none"
     >
 
+    <FrameLayout
+        android:background="@drawable/background_message_image"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="@+id/fragment5"
+        android:layout_marginTop="85dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/geoBoardCreateButton"
+        android:layout_marginBottom="8dp"
+        android:layout_height="410dp">
+
+    </FrameLayout>
+
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="250dp"
@@ -23,19 +37,9 @@
         tools:layout="@layout/app_header"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/frameLayout"/>
-
-    <FrameLayout
-        android:background="@drawable/background_message_image"
-        android:layout_width="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/frameLayout"
-        app:layout_constraintTop_toTopOf="@+id/fragment5"
-        android:layout_marginTop="85dp"
-        android:layout_height="445dp">
-
-    </FrameLayout>
+        app:layout_constraintRight_toRightOf="@+id/frameLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        />
 
     <TextView
         android:text="@string/geoBoardTitleTextView"
@@ -101,28 +105,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/geoBoardCreateButton"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/geoBoardMessageTextArea"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:onClick="createGeoBoard"/>
-
-    <EditText
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/geoBoardMessageTextArea"
-        android:layout_height="250dp"
-        android:hint="@string/geoBoardMessageHint"
-        android:gravity="top|left"
-        app:layout_constraintTop_toBottomOf="@+id/geoBoardSubjectEditText"
-        android:layout_marginTop="5dp"
-        app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
+        android:onClick="createGeoBoard"
         app:layout_constraintRight_toRightOf="@+id/frameLayout"
-        android:layout_marginStart="24dp"
-        android:layout_width="0dp"
-        android:layout_marginEnd="24dp"/>
+        app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+    <ScrollView
+        android:layout_width="337dp"
+        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+        app:layout_constraintRight_toRightOf="@+id/frameLayout"
+        app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
+        app:layout_constraintHorizontal_bias="0.54"
+        android:layout_height="300dp">
+
+        <EditText
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/geoBoardMessageTextArea"
+            android:layout_height="250dp"
+            android:hint="@string/geoBoardMessageHint"
+            android:gravity="top|left"
+            app:layout_constraintTop_toBottomOf="@+id/geoBoardSubjectEditText"
+            android:layout_marginTop="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
+            app:layout_constraintRight_toRightOf="@+id/frameLayout"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_width="300dp"/>
+
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>
