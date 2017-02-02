@@ -15,8 +15,8 @@
     <string name="textViewRegisterHere">Not registered yet? Register here!</string>
     <string name="userLoginHeader">User Login</string>
     <string name="loginButton">Login</string>
-    <string name="buttonCreateGeoBoard">Create Geo-Board</string>
-    <string name="buttonViewGeoBoard">View Geo-boards</string>
+    <string name="buttonCreateGeoBoard">Create \nGeo-Board</string>
+    <string name="buttonViewGeoBoard">View \nGeo-boards</string>
     <string name="title_activity_maps">Map</string>
     <string name="geoBoardTitleTextView">Title:</string>
     <string name="geoBoardSubjectTextView">Subject:</string>

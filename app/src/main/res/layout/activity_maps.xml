@@ -44,6 +44,17 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:onClick="createGeoBoard"/>
+
+        <Button
+            android:text="@string/logout"
+            android:layout_width="match_parent"
+            android:id="@+id/buttonLogout"
+            android:textSize="14sp"
+            android:onClick="logOut"
+            tools:ignore="ButtonStyle"
+            android:layout_weight="1.2"
+            android:layout_marginTop="18dp"
+            android:layout_height="55dp"/>
     </LinearLayout>
 
 </LinearLayout>

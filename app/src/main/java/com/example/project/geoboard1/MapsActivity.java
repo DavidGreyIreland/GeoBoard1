@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener
 {
@@ -34,6 +36,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker currentLocationMarker;
     Button buttonCreateGeoBoard;
     Button buttonViewGeoBoard;
+    Button buttonLogout;
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,6 +48,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        buttonLogout = (Button)findViewById(R.id.buttonLogout);
+        // initializes firebase object
+        firebaseAuth = firebaseAuth.getInstance();
     }
 
     /**
@@ -168,6 +176,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void createGeoBoard(View v)
     {
         startActivity(new Intent(getApplication(), CreateGeoBoard.class));
+    }
+
+    public void logOut(View view)
+    {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if(view == buttonLogout)
+        {
+            Toast.makeText(this, user.getEmail() + " has logged out!", Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 }
 
