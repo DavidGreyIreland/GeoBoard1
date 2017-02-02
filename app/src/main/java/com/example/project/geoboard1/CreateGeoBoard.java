@@ -1,6 +1,7 @@
 package com.example.project.geoboard1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -86,7 +87,6 @@ public class CreateGeoBoard extends AppCompatActivity
             ex.printStackTrace();
         }
 
-        //TODO surround with an if statement for when the user finishes the security checks first then they save
         saveGeoBoardInfo();
     }
 
@@ -101,11 +101,48 @@ public class CreateGeoBoard extends AppCompatActivity
         String saveTitle = title.getText().toString().trim();
         String saveSubject = subject.getText().toString().trim();
         String saveMessage = message.getText().toString().trim();
+        Boolean saveToDatabase = true;
 
-        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+        if(saveTitle.equals(null) || saveTitle.equals(""))
+        {
+            Toast.makeText(this, "Please enter a Title!", Toast.LENGTH_SHORT).show();
+            saveToDatabase = false;
+        }
+        else if(saveSubject.equals(null) || saveSubject.equals(""))
+        {
+            Toast.makeText(this, "Please enter a Subject!", Toast.LENGTH_SHORT).show();
+            saveToDatabase = false;
+        }
+        else if(saveMessage.equals(null) || saveMessage.equals(""))
+        {
+            Toast.makeText(this, "Please enter a Message!", Toast.LENGTH_SHORT).show();
+            saveToDatabase = false;
+        }
+        else
+        {
+            saveToDatabase = true;
+        }
 
-        //FirebaseUser user = firebaseAuth.getCurrentUser();
-        //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
-        Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
+        // TODO also needs to choose security setting and apply it before saving
+        if(saveToDatabase)
+        {
+            //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+
+            //FirebaseUser user = firebaseAuth.getCurrentUser();
+            //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
+            Toast.makeText(this, "Choose security option", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SecurityChoiceActivity.class));
+        }
+
+
+/*        if(saveToDatabase)
+        {
+            //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+
+            //FirebaseUser user = firebaseAuth.getCurrentUser();
+            //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
+            Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MapsActivity.class));
+        }*/
     }
 }

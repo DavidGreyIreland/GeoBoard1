@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_nfc_security"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.project.geoboard1.NfcSecurity">
+    android:id="@+id/activity_create_geo_board"
+    tools:context="com.example.project.geoboard1.CreateGeoBoard"
+    app:layout_editor_absoluteX="0dp"
+    app:layout_editor_absoluteY="80dp"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="80dp"
+    android:layerType="none"
+    >
 
-</RelativeLayout>
+    <fragment
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:name="com.example.project.geoboard1.AppHeaderFragment"
+        android:id="@+id/fragment4"
+        tools:layout="@layout/app_header"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <ImageView
+        android:layout_width="178dp"
+        android:layout_height="169dp"
+        app:srcCompat="@drawable/nfc_tag_image1"
+        android:id="@+id/imageView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="100dp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment4"
+        android:contentDescription="@string/nfcTagImage"/>
+
+</android.support.constraint.ConstraintLayout>

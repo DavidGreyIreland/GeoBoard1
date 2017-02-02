@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GeoBoard1</string>
-    <string name="radioButtonSecuritySetting1">Security Setting (1)</string>
+    <string name="radioButtonSecuritySetting1">Security Setting (NFC)</string>
     <string name="radioButtonSecuritySetting2">Security Setting (2)</string>
     <string name="radioButtonSecuritySetting3">Security Setting (3)</string>
     <string name="apply">Apply</string>
@@ -23,4 +23,5 @@
     <string name="geoBoardMessageHint">Add your message here:</string>
     <string name="geoBoardTitleHint">Add title here:</string>
     <string name="geoBoardSubjectHint">Add subject here:</string>
+    <string name="nfcTagImage">Tap NFC Tag:</string>
 </resources>

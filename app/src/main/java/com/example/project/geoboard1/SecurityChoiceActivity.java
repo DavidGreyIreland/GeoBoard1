@@ -77,10 +77,11 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             radioButton = (RadioButton)findViewById(selectedId);
             String radioButtonSecurityResult = radioButton.getText().toString();
 
-            Intent intent = new Intent(getApplication(), MapsActivity.class);
-            intent.putExtra("SecurityOption", radioButtonSecurityResult);
-
-            startActivity(intent);
+            if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
+            {
+                finish();
+                startActivity(new Intent(this, NfcSecurity.class));
+            }
         }
     }
 }

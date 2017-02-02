@@ -36,7 +36,7 @@ public class NfcSecurity extends AppCompatActivity
 
     private void enableForegroundDispatchSystem()
     {
-        Intent i = new Intent(this, MainActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+        Intent i = new Intent(this, NfcSecurity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
         PendingIntent pI = PendingIntent.getActivity(this, 0 ,i, 0);
         IntentFilter[] iF = new IntentFilter[]{};
         nfcAdapter.enableForegroundDispatch(this, pI, iF, null);
@@ -153,6 +153,8 @@ public class NfcSecurity extends AppCompatActivity
                 ndef.close();
 
                 Toast.makeText(this, "Tag is writen", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(this, MapsActivity.class));
             }
         }
         catch(Exception e)
