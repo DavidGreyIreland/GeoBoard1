@@ -38,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Button buttonViewGeoBoard;
     Button buttonLogout;
     FirebaseAuth firebaseAuth;
+    Bundle passingBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -175,7 +176,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void createGeoBoard(View v)
     {
-        startActivity(new Intent(getApplication(), CreateGeoBoard.class));
+        String location = getLat() + " " + getLon();
+
+        passingBundle = new Bundle();
+        passingBundle.putString("location", location);
+
+        Intent i = new Intent(getApplicationContext(), CreateGeoBoard.class);
+        i.putExtras(passingBundle);
+
+        startActivity(i);
     }
 
     public void logOut(View view)

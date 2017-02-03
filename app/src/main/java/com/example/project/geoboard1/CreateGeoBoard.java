@@ -1,14 +1,7 @@
 package com.example.project.geoboard1;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -22,9 +15,11 @@ public class CreateGeoBoard extends AppCompatActivity
 {
     EditText title, subject, message;
     private double lat, lon;
-    Location location;
+    String location;
     private DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
+    Bundle retrievingBundle;
+    Bundle passingBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,67 +31,12 @@ public class CreateGeoBoard extends AppCompatActivity
         subject = (EditText)findViewById(R.id.geoBoardSubjectEditText);
         message = (EditText)findViewById(R.id.geoBoardMessageTextArea);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        retrievingBundle = getIntent().getExtras();
     }
 
-    public void createGeoBoard(View view)
-    {
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener()
-        {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                myLocation(location);
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
-            {
-
-            }
-        };
-
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-
-
-        try
-        {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-        } catch(SecurityException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        saveGeoBoardInfo();
-    }
-
-    private void myLocation(Location location)
-    {
-        lat = location.getLatitude();
-        lon = location.getLongitude();
-    }
-
-    private void saveGeoBoardInfo()
+    public void saveGeoBoardInfo(View view)
     {
         String saveTitle = title.getText().toString().trim();
         String saveSubject = subject.getText().toString().trim();
@@ -130,8 +70,14 @@ public class CreateGeoBoard extends AppCompatActivity
 
             //FirebaseUser user = firebaseAuth.getCurrentUser();
             //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
-            Toast.makeText(this, "Choose security option", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, SecurityChoiceActivity.class));
+
+            passingBundle = new Bundle();
+            passingBundle.putString("location", retrievingBundle.getString("location"));
+
+            Intent i = new Intent(getApplicationContext(), SecurityChoiceActivity.class);
+            i.putExtras(passingBundle);
+
+            startActivity(i);
         }
 
 

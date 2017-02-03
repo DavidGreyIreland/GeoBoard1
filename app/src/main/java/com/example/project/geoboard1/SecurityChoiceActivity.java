@@ -19,7 +19,8 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
     Button buttonSecurity;
     TextView textViewUserEmail;
     FirebaseAuth firebaseAuth;
-
+    Bundle retrievingBundle;
+    Bundle passingBundle;
 
     /***************************************************************************************/
     /****************************** Security setting choices *******************************/
@@ -80,7 +81,15 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
             {
                 finish();
-                startActivity(new Intent(this, NfcSecurity.class));
+
+                retrievingBundle = getIntent().getExtras();
+                passingBundle = new Bundle();
+                passingBundle.putString("location", retrievingBundle.getString("location"));
+
+                Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
+                i.putExtras(passingBundle);
+
+                startActivity(i);
             }
         }
     }

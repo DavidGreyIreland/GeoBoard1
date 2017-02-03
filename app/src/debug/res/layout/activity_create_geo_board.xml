@@ -105,11 +105,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/geoBoardCreateButton"
-        android:onClick="createGeoBoard"
         app:layout_constraintRight_toRightOf="@+id/frameLayout"
         app:layout_constraintLeft_toLeftOf="@+id/frameLayout"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:onClick="saveGeoBoardInfo"/>
 
     <ScrollView
         android:layout_width="337dp"
@@ -125,7 +125,7 @@
             android:id="@+id/geoBoardMessageTextArea"
             android:layout_height="250dp"
             android:hint="@string/geoBoardMessageHint"
-            android:gravity="top|left"
+            android:gravity="top|start"
             app:layout_constraintTop_toBottomOf="@+id/geoBoardSubjectEditText"
             android:layout_marginTop="5dp"
             app:layout_constraintLeft_toLeftOf="@+id/frameLayout"

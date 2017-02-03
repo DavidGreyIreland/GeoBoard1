@@ -1,6 +1,7 @@
 package com.example.project.geoboard1;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -10,9 +11,11 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -22,6 +25,9 @@ public class NfcSecurity extends AppCompatActivity
 {
     NfcAdapter nfcAdapter;
     Random r = new Random();
+    private Context context;
+    private Vibrator v;
+    Bundle retrievingBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,6 +36,7 @@ public class NfcSecurity extends AppCompatActivity
         setContentView(R.layout.activity_nfc_security);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 
@@ -66,7 +73,6 @@ public class NfcSecurity extends AppCompatActivity
     }
 
 
-    // TODO retrieve location lon/lat
     @Override
     protected void onNewIntent(Intent i)
     {
@@ -85,13 +91,21 @@ public class NfcSecurity extends AppCompatActivity
         }
     }
 
+
+    // TODO retrieve location lon/lat
     private String createNFCLocationId()
     {
-        final int min = 1000000;
-        final int max = 100000000;
+        String nfcLocationId;
+
+        retrievingBundle = getIntent().getExtras();
+        String location = retrievingBundle.getString("location");
+
+        final int min = 10000;
+        final int max = 100000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
-        return "" + randomNumber;
+        nfcLocationId = location + " " + randomNumber;
+        return nfcLocationId;
     }
 
 
@@ -120,6 +134,7 @@ public class NfcSecurity extends AppCompatActivity
 
     private void writeMessage(Tag t, NdefMessage message)
     {
+        boolean tagWritten = false;
         try
         {
             NdefFormatable ndefF = NdefFormatable.get(t);
@@ -152,15 +167,32 @@ public class NfcSecurity extends AppCompatActivity
                 ndef.writeNdefMessage(message);
                 ndef.close();
 
-                Toast.makeText(this, "Tag is writen", Toast.LENGTH_SHORT).show();
-                finish();
-                startActivity(new Intent(this, MapsActivity.class));
+                tagWritten = true;
+                if(tagWritten)
+                {
+                    /******************************************************************************************************/
+                    /************************************* Vibrate when tag is written ************************************/
+                    /******************************************************************************************************/
+                    if(v.hasVibrator())
+                    {
+                        v.vibrate(500);
+                    }
+
+                    Toast.makeText(this, "Tag is writen", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(this, MapsActivity.class));
+                }
             }
         }
         catch(Exception e)
         {
             Log.e("write message", e.getMessage());
         }
+
+        /*****************************************************************************************************************/
+        /***************************************** Vibrate if NFC tag is written *****************************************/
+        /*****************************************************************************************************************/
+
     }
 
 
