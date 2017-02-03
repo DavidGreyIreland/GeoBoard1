@@ -7,17 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 public class CreateGeoBoard extends AppCompatActivity
 {
     EditText title, subject, message;
-    private double lat, lon;
-    String location;
-    private DatabaseReference databaseReference;
-    FirebaseAuth firebaseAuth;
     Bundle retrievingBundle;
     Bundle passingBundle;
 
@@ -30,7 +22,6 @@ public class CreateGeoBoard extends AppCompatActivity
         title = (EditText)findViewById(R.id.geoBoardTitleEditText);
         subject = (EditText)findViewById(R.id.geoBoardSubjectEditText);
         message = (EditText)findViewById(R.id.geoBoardMessageTextArea);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         retrievingBundle = getIntent().getExtras();
     }
@@ -41,36 +32,31 @@ public class CreateGeoBoard extends AppCompatActivity
         String saveTitle = title.getText().toString().trim();
         String saveSubject = subject.getText().toString().trim();
         String saveMessage = message.getText().toString().trim();
-        Boolean saveToDatabase = true;
+        Boolean sendToSecurityChoiceActivity = true;
 
         if(saveTitle.equals(null) || saveTitle.equals(""))
         {
             Toast.makeText(this, "Please enter a Title!", Toast.LENGTH_SHORT).show();
-            saveToDatabase = false;
+            sendToSecurityChoiceActivity = false;
         }
         else if(saveSubject.equals(null) || saveSubject.equals(""))
         {
             Toast.makeText(this, "Please enter a Subject!", Toast.LENGTH_SHORT).show();
-            saveToDatabase = false;
+            sendToSecurityChoiceActivity = false;
         }
         else if(saveMessage.equals(null) || saveMessage.equals(""))
         {
             Toast.makeText(this, "Please enter a Message!", Toast.LENGTH_SHORT).show();
-            saveToDatabase = false;
+            sendToSecurityChoiceActivity = false;
         }
         else
         {
-            saveToDatabase = true;
+            sendToSecurityChoiceActivity = true;
         }
 
         // TODO also needs to choose security setting and apply it before saving
-        if(saveToDatabase)
+        if(sendToSecurityChoiceActivity)
         {
-            //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
-
-            //FirebaseUser user = firebaseAuth.getCurrentUser();
-            //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
-
             passingBundle = new Bundle();
             passingBundle.putString("location", retrievingBundle.getString("location"));
 
@@ -79,16 +65,5 @@ public class CreateGeoBoard extends AppCompatActivity
 
             startActivity(i);
         }
-
-
-/*        if(saveToDatabase)
-        {
-            //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
-
-            //FirebaseUser user = firebaseAuth.getCurrentUser();
-            //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
-            Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MapsActivity.class));
-        }*/
     }
 }

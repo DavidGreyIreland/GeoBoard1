@@ -16,6 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -29,6 +33,9 @@ public class NfcSecurity extends AppCompatActivity
     private Vibrator v;
     Bundle retrievingBundle;
 
+    private DatabaseReference databaseReference;
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -37,8 +44,18 @@ public class NfcSecurity extends AppCompatActivity
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
+
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        enableForegroundDispatchSystem();
+    }
 
 
     private void enableForegroundDispatchSystem()
@@ -50,26 +67,17 @@ public class NfcSecurity extends AppCompatActivity
     }
 
 
-
-    private void disableForegroundDispatchSystem()
-    {
-        nfcAdapter.disableForegroundDispatch(this);
-    }
-
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        enableForegroundDispatchSystem();
-    }
-
-
     @Override
     protected void onPause()
     {
         super.onPause();
         disableForegroundDispatchSystem();
+    }
+
+
+    private void disableForegroundDispatchSystem()
+    {
+        nfcAdapter.disableForegroundDispatch(this);
     }
 
 
@@ -86,13 +94,11 @@ public class NfcSecurity extends AppCompatActivity
 
             createNFCLocationId();
 
-            // TODO aswell as writing to the nfc tag, the unique location/randomNumber ID should be stored on the firebase database
             writeMessage(t, message);
         }
     }
 
-
-    // TODO retrieve location lon/lat
+    // creates a unique location ID
     private String createNFCLocationId()
     {
         String nfcLocationId;
@@ -104,7 +110,8 @@ public class NfcSecurity extends AppCompatActivity
         final int max = 100000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
-        nfcLocationId = location + " " + randomNumber;
+        // NFC defines which security feature to use when reading GeoBoards.
+        nfcLocationId = location + " " + randomNumber + " NFC";
         return nfcLocationId;
     }
 
@@ -132,6 +139,7 @@ public class NfcSecurity extends AppCompatActivity
     }
 
 
+    // TODO the unique location/randomNumber ID should be stored on the firebase database
     private void writeMessage(Tag t, NdefMessage message)
     {
         boolean tagWritten = false;
@@ -167,6 +175,8 @@ public class NfcSecurity extends AppCompatActivity
                 ndef.writeNdefMessage(message);
                 ndef.close();
 
+                saveToDatabase();
+
                 tagWritten = true;
                 if(tagWritten)
                 {
@@ -188,11 +198,6 @@ public class NfcSecurity extends AppCompatActivity
         {
             Log.e("write message", e.getMessage());
         }
-
-        /*****************************************************************************************************************/
-        /***************************************** Vibrate if NFC tag is written *****************************************/
-        /*****************************************************************************************************************/
-
     }
 
 
@@ -203,14 +208,14 @@ public class NfcSecurity extends AppCompatActivity
             byte[] language;
             language = Locale.getDefault().getLanguage().getBytes("UTF-8");
 
-            final byte[] text = s.getBytes("UTF-8");
-            final int languageSize = language.length;
-            final int textLength = text.length;
-            final ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + textLength);
+            byte[] text = s.getBytes("UTF-8");
+            int languageSize = language.length;
+            int length = text.length;
+            ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + length);
 
             payload.write((byte)(languageSize & 0x1F));
             payload.write(language, 0, languageSize);
-            payload.write(text, 0, textLength);
+            payload.write(text, 0, length);
 
             return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload.toByteArray());
         }
@@ -230,5 +235,15 @@ public class NfcSecurity extends AppCompatActivity
                         record
                 });
         return message;
+    }
+
+    public void saveToDatabase()
+    {
+        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+
+        //FirebaseUser user = firebaseAuth.getCurrentUser();
+        //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
+        Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, MapsActivity.class));
     }
 }
