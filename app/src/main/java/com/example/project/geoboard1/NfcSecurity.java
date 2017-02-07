@@ -32,8 +32,10 @@ public class NfcSecurity extends AppCompatActivity
     private Context context;
     private Vibrator v;
     Bundle retrievingBundle;
+    private String location, geoBoardId, title, subject, userMessage, currentUser;
 
-    private DatabaseReference databaseReference;
+    //private FirebaseDatabase database;
+    private DatabaseReference databaseReference, myRef;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -45,9 +47,13 @@ public class NfcSecurity extends AppCompatActivity
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+        // Write a message to the database
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        retrievingBundle = getIntent().getExtras();
+        title = retrievingBundle.getString("title");
+        // adds a child to the database
+        //myRef = myRef.child("Name").child("");
     }
-
 
 
     @Override
@@ -101,18 +107,16 @@ public class NfcSecurity extends AppCompatActivity
     // creates a unique location ID
     private String createNFCLocationId()
     {
-        String nfcLocationId;
-
         retrievingBundle = getIntent().getExtras();
-        String location = retrievingBundle.getString("location");
+        location = retrievingBundle.getString("location");
 
         final int min = 10000;
         final int max = 100000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
         // NFC defines which security feature to use when reading GeoBoards.
-        nfcLocationId = location + " " + randomNumber + " NFC";
-        return nfcLocationId;
+        geoBoardId = location + " " + randomNumber + " NFC";
+        return geoBoardId;
     }
 
 
@@ -175,11 +179,11 @@ public class NfcSecurity extends AppCompatActivity
                 ndef.writeNdefMessage(message);
                 ndef.close();
 
-                saveToDatabase();
-
                 tagWritten = true;
                 if(tagWritten)
                 {
+                    saveToDatabase();
+
                     /******************************************************************************************************/
                     /************************************* Vibrate when tag is written ************************************/
                     /******************************************************************************************************/
@@ -188,7 +192,7 @@ public class NfcSecurity extends AppCompatActivity
                         v.vibrate(500);
                     }
 
-                    Toast.makeText(this, "Tag is writen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Tag is written", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(this, MapsActivity.class));
                 }
@@ -239,8 +243,29 @@ public class NfcSecurity extends AppCompatActivity
 
     public void saveToDatabase()
     {
-        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
+        //get an instance of the firebaseAuth
+        firebaseAuth = firebaseAuth.getInstance();
+        retrievingBundle = getIntent().getExtras();
+        title = retrievingBundle.getString("title");
+        subject = retrievingBundle.getString("subject");
+        userMessage = retrievingBundle.getString("message");
+        currentUser = firebaseAuth.getCurrentUser().toString();
 
+
+        // Write a message to the database
+        myRef = FirebaseDatabase.getInstance().getReference("geoBoardId");
+        myRef.setValue(geoBoardId);
+
+        // sets geoBoardId for child Strings
+        myRef.child("geoBoardId");
+            myRef.child("location").setValue(location);
+            myRef.child("message").setValue(userMessage);
+            myRef.child("userId").setValue(currentUser);
+            myRef.child("title").setValue(title);
+            myRef.child("subject").setValue(subject);
+
+
+        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
         //FirebaseUser user = firebaseAuth.getCurrentUser();
         //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
         Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();

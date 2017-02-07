@@ -53,13 +53,16 @@ public class CreateGeoBoard extends AppCompatActivity
         {
             sendToSecurityChoiceActivity = true;
         }
+        MainActivity main = new MainActivity();
 
         // TODO also needs to choose security setting and apply it before saving
         if(sendToSecurityChoiceActivity)
         {
             passingBundle = new Bundle();
             passingBundle.putString("location", retrievingBundle.getString("location"));
-
+            passingBundle.putString("title", saveTitle);
+            passingBundle.putString("subject", saveSubject);
+            passingBundle.putString("message", saveMessage);
             Intent i = new Intent(getApplicationContext(), SecurityChoiceActivity.class);
             i.putExtras(passingBundle);
 

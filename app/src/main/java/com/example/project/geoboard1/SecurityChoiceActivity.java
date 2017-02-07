@@ -83,8 +83,12 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
                 finish();
 
                 retrievingBundle = getIntent().getExtras();
+
                 passingBundle = new Bundle();
                 passingBundle.putString("location", retrievingBundle.getString("location"));
+                passingBundle.putString("title", retrievingBundle.getString("title"));
+                passingBundle.putString("subject", retrievingBundle.getString("subject"));
+                passingBundle.putString("message", retrievingBundle.getString("message"));
 
                 Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
                 i.putExtras(passingBundle);
