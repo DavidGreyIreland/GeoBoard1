@@ -249,15 +249,13 @@ public class NfcSecurity extends AppCompatActivity
         title = retrievingBundle.getString("title");
         subject = retrievingBundle.getString("subject");
         userMessage = retrievingBundle.getString("message");
-        currentUser = firebaseAuth.getCurrentUser().toString();
-
+        currentUser = firebaseAuth.getCurrentUser().getUid();
 
         // Write a message to the database
         myRef = FirebaseDatabase.getInstance().getReference("geoBoardId");
         myRef.setValue(geoBoardId);
 
         // sets geoBoardId for child Strings
-        myRef.child("geoBoardId");
             myRef.child("location").setValue(location);
             myRef.child("message").setValue(userMessage);
             myRef.child("userId").setValue(currentUser);
