@@ -176,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void createGeoBoard(View v)
     {
-        String location = getLat() + " " + getLon();
+        String location = "lat" + getLat() + "lon" + getLon();
 
         passingBundle = new Bundle();
         passingBundle.putString("location", location);

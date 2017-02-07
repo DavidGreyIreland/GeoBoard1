@@ -35,7 +35,7 @@ public class NfcSecurity extends AppCompatActivity
     private String location, geoBoardId, title, subject, userMessage, currentUser;
 
     //private FirebaseDatabase database;
-    private DatabaseReference databaseReference, myRef;
+    private DatabaseReference databaseReference, geoBoardRef, geoBoardChildRef;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -110,12 +110,13 @@ public class NfcSecurity extends AppCompatActivity
         retrievingBundle = getIntent().getExtras();
         location = retrievingBundle.getString("location");
 
-        final int min = 10000;
-        final int max = 100000;
+        final int min = 1000000;
+        final int max = 10000000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
         // NFC defines which security feature to use when reading GeoBoards.
-        geoBoardId = location + " " + randomNumber + " NFC";
+        geoBoardId = "geoBoardId" + randomNumber + "NFC";
+        //geoBoardId = "" + randomNumber;
         return geoBoardId;
     }
 
@@ -252,15 +253,15 @@ public class NfcSecurity extends AppCompatActivity
         currentUser = firebaseAuth.getCurrentUser().getUid();
 
         // Write a message to the database
-        myRef = FirebaseDatabase.getInstance().getReference("geoBoardId");
-        myRef.setValue(geoBoardId);
-
-        // sets geoBoardId for child Strings
-            myRef.child("location").setValue(location);
-            myRef.child("message").setValue(userMessage);
-            myRef.child("userId").setValue(currentUser);
-            myRef.child("title").setValue(title);
-            myRef.child("subject").setValue(subject);
+        geoBoardRef = FirebaseDatabase.getInstance().getReference(geoBoardId);
+            //geoBoardRef.child(geoBoardId).setValue(geoBoardId);
+        //geoBoardChildRef = FirebaseDatabase.getInstance().getReference("geoBoards/" + geoBoardId);
+                // sets geoBoardId for child Strings
+                geoBoardRef.child("location").setValue(location);
+                geoBoardRef.child("message").setValue(userMessage);
+                geoBoardRef.child("userId").setValue(currentUser);
+                geoBoardRef.child("title").setValue(title);
+                geoBoardRef.child("subject").setValue(subject);
 
 
         //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
