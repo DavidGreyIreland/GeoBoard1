@@ -35,7 +35,7 @@ public class NfcSecurity extends AppCompatActivity
     private String location, geoBoardId, title, subject, userMessage, currentUser;
 
     //private FirebaseDatabase database;
-    private DatabaseReference databaseReference, geoBoardRef, geoBoardChildRef;
+    private DatabaseReference databaseReference, geoBoardRef;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -254,8 +254,7 @@ public class NfcSecurity extends AppCompatActivity
 
         // Write a message to the database
         geoBoardRef = FirebaseDatabase.getInstance().getReference(geoBoardId);
-            //geoBoardRef.child(geoBoardId).setValue(geoBoardId);
-        //geoBoardChildRef = FirebaseDatabase.getInstance().getReference("geoBoards/" + geoBoardId);
+
                 // sets geoBoardId for child Strings
                 geoBoardRef.child("location").setValue(location);
                 geoBoardRef.child("message").setValue(userMessage);

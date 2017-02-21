@@ -42,6 +42,11 @@
         </activity>
         <activity android:name=".SecurityChoiceActivity">
         </activity>
+        <activity android:name=".CreateGeoBoard">
+        </activity>
+        <activity android:name=".ViewGeoBoard">
+        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

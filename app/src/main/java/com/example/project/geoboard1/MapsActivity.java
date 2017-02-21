@@ -130,31 +130,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
     }
 
+
     public double getLat()
     {
         return lat;
     }
+
 
     public void setLat(double lat)
     {
         this.lat = lat;
     }
 
+
     public double getLon()
     {
         return lon;
     }
+
 
     public void setLon(double lon)
     {
         this.lon = lon;
     }
 
+
     private void myLocation(Location location)
     {
         lat = location.getLatitude();
         lon = location.getLongitude();
     }
+
 
     // TODO two types of markers, the person marker shows where the user is walking, the Geo-Board marker shows available Geo-Boards
     @Override
@@ -168,12 +174,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
+
+    // views a list of users GeoBoards
     public void viewGeoBoard(View v)
     {
-        Toast.makeText(this, "view button works", Toast.LENGTH_SHORT).show();
-
+        finish();
+        startActivity(new Intent(getApplication(), ViewGeoBoard.class));
     }
 
+
+    // creates GeoBoards
     public void createGeoBoard(View v)
     {
         String location = "lat" + getLat() + "lon" + getLon();
@@ -186,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         startActivity(i);
     }
+
 
     public void logOut(View view)
     {
