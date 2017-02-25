@@ -32,10 +32,10 @@ public class NfcSecurity extends AppCompatActivity
     private Context context;
     private Vibrator v;
     Bundle retrievingBundle;
-    private String location, geoBoardId, title, subject, userMessage, currentUser;
+    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
 
     //private FirebaseDatabase database;
-    private DatabaseReference databaseReference, geoBoardRef;
+    private DatabaseReference databaseReference, geoBoardRef, databaseMessage, databaseLocation;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -98,26 +98,42 @@ public class NfcSecurity extends AppCompatActivity
             Tag t = i.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefMessage message = createNdefMessage(createNFCLocationId());
 
-            createNFCLocationId();
-
             writeMessage(t, message);
         }
     }
 
-    // creates a unique location ID
+    // creates a unique NFC ID/Location ID
     private String createNFCLocationId()
     {
         retrievingBundle = getIntent().getExtras();
         location = retrievingBundle.getString("location");
+
+        // removed '.' with '-'
+        String enhancedLocation = location.replace(".", "-");
+        final int min = 1000;
+        final int max = 10000;
+        int randomNumber = r.nextInt((max - min) + 1) + min;
+
+        // NFC defines which security feature to use when reading GeoBoards.
+        geoBoardId = randomNumber + ":" + enhancedLocation + ":NFC";
+
+        // this should give : "14328:lat105-123lon85-321:NFC"
+        return geoBoardId;
+    }
+
+    // creates a unique location ID
+    private String createMessageId()
+    {
+        retrievingBundle = getIntent().getExtras();
 
         final int min = 1000000;
         final int max = 10000000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
         // NFC defines which security feature to use when reading GeoBoards.
-        geoBoardId = "geoBoardId" + randomNumber + "NFC";
-        //geoBoardId = "" + randomNumber;
-        return geoBoardId;
+        messageId = "messageId" + randomNumber;
+
+        return messageId;
     }
 
 
@@ -144,7 +160,6 @@ public class NfcSecurity extends AppCompatActivity
     }
 
 
-    // TODO the unique location/randomNumber ID should be stored on the firebase database
     private void writeMessage(Tag t, NdefMessage message)
     {
         boolean tagWritten = false;
@@ -164,6 +179,8 @@ public class NfcSecurity extends AppCompatActivity
 
             if(t == null)
             {
+                Toast.makeText(this, "Tag is formatting", Toast.LENGTH_SHORT).show();
+
                 formatTag(t, message);
             }
             else
@@ -183,6 +200,7 @@ public class NfcSecurity extends AppCompatActivity
                 tagWritten = true;
                 if(tagWritten)
                 {
+                    createMessageId();
                     saveToDatabase();
 
                     /******************************************************************************************************/
@@ -251,6 +269,17 @@ public class NfcSecurity extends AppCompatActivity
         subject = retrievingBundle.getString("subject");
         userMessage = retrievingBundle.getString("message");
         currentUser = firebaseAuth.getCurrentUser().getUid();
+/*
+        geoBoardRef = FirebaseDatabase.getInstance().getReference();
+
+        // perfect
+        geoBoardRef.child("Messages").child(messageId).child("message").setValue(userMessage);
+        geoBoardRef.child("Messages").child(messageId).child("securityType").setValue("NFC");
+
+        //geoBoardRef.child("Users").child(currentUser).child("userId").setValue(currentUser);
+        geoBoardRef.child("Users").child(currentUser).child("locationId").setValue(geoBoardId);
+        geoBoardRef.child("Users").child(currentUser).child("messageId").setValue(messageId);
+        */
 
         // Write a message to the database
         geoBoardRef = FirebaseDatabase.getInstance().getReference(geoBoardId);
@@ -262,11 +291,7 @@ public class NfcSecurity extends AppCompatActivity
                 geoBoardRef.child("title").setValue(title);
                 geoBoardRef.child("subject").setValue(subject);
 
-
-        //UserGeoBoardDatabase userGeoBoardDatabase = new UserGeoBoardDatabase(saveTitle, saveSubject, saveMessage, lat, lon);
-        //FirebaseUser user = firebaseAuth.getCurrentUser();
-        //databaseReference.child(user.getUid()).setValue(userGeoBoardDatabase);
-        Toast.makeText(this, "Info saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, MapsActivity.class));
     }
 }
