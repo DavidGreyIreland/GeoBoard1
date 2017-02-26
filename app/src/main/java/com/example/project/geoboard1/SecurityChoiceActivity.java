@@ -92,6 +92,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
                 title = retrievingBundle.getString("title");
                 subject = retrievingBundle.getString("subject");
                 userMessage = retrievingBundle.getString("message");
+                location = retrievingBundle.getString("location");
                 currentUser = firebaseAuth.getCurrentUser().getUid();
 /*
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
