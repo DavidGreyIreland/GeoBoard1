@@ -35,7 +35,7 @@ public class NfcSecurity extends AppCompatActivity
     private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
 
     //private FirebaseDatabase database;
-    private DatabaseReference databaseReference, geoBoardRef, databaseMessage, databaseLocation;
+    private DatabaseReference geoBoardRef;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -47,12 +47,8 @@ public class NfcSecurity extends AppCompatActivity
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        // Write a message to the database
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         retrievingBundle = getIntent().getExtras();
         title = retrievingBundle.getString("title");
-        // adds a child to the database
-        //myRef = myRef.child("Name").child("");
     }
 
 
@@ -279,7 +275,7 @@ public class NfcSecurity extends AppCompatActivity
         //geoBoardRef.child("Users").child(currentUser).child("userId").setValue(currentUser);
         geoBoardRef.child("Users").child(currentUser).child("locationId").setValue(geoBoardId);
         geoBoardRef.child("Users").child(currentUser).child("messageId").setValue(messageId);
-        */
+*/
 
         // Write a message to the database
         geoBoardRef = FirebaseDatabase.getInstance().getReference(geoBoardId);

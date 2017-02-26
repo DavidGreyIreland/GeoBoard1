@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GeoBoard1</string>
-    <string name="radioButtonSecuritySetting1">Security Setting (NFC)</string>
-    <string name="radioButtonSecuritySetting2">Security Setting (2)</string>
+    <string name="radioButtonSecuritySetting1">Security Setting (None)</string>
+    <string name="radioButtonSecuritySetting2">Security Setting (NFC)</string>
     <string name="radioButtonSecuritySetting3">Security Setting (3)</string>
     <string name="apply">Apply</string>
     <string name="logout">Logout</string>

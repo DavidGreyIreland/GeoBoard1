@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SecurityChoiceActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -21,6 +23,8 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
     FirebaseAuth firebaseAuth;
     Bundle retrievingBundle;
     Bundle passingBundle;
+    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
+    private DatabaseReference geoBoardRef;
 
     /***************************************************************************************/
     /****************************** Security setting choices *******************************/
@@ -78,7 +82,43 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             radioButton = (RadioButton)findViewById(selectedId);
             String radioButtonSecurityResult = radioButton.getText().toString();
 
-            if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
+            if(radioButtonSecurityResult.equals("Security Setting (None)"))
+            {
+                finish();
+
+                //get an instance of the firebaseAuth
+                firebaseAuth = firebaseAuth.getInstance();
+                retrievingBundle = getIntent().getExtras();
+                title = retrievingBundle.getString("title");
+                subject = retrievingBundle.getString("subject");
+                userMessage = retrievingBundle.getString("message");
+                currentUser = firebaseAuth.getCurrentUser().getUid();
+/*
+        geoBoardRef = FirebaseDatabase.getInstance().getReference();
+
+        // perfect
+        geoBoardRef.child("Messages").child(messageId).child("message").setValue(userMessage);
+        geoBoardRef.child("Messages").child(messageId).child("securityType").setValue("NFC");
+
+        //geoBoardRef.child("Users").child(currentUser).child("userId").setValue(currentUser);
+        geoBoardRef.child("Users").child(currentUser).child("locationId").setValue(geoBoardId);
+        geoBoardRef.child("Users").child(currentUser).child("messageId").setValue(messageId);
+*/
+
+                // Write a message to the database
+                geoBoardRef = FirebaseDatabase.getInstance().getReference("asdf");
+
+                // sets geoBoardId for child Strings
+                geoBoardRef.child("location").setValue(location);
+                geoBoardRef.child("message").setValue(userMessage);
+                geoBoardRef.child("userId").setValue(currentUser);
+                geoBoardRef.child("title").setValue(title);
+                geoBoardRef.child("subject").setValue(subject);
+
+                Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MapsActivity.class));
+            }
+            else if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
             {
                 finish();
 
