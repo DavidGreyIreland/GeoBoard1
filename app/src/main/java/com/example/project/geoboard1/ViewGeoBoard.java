@@ -14,7 +14,6 @@ public class ViewGeoBoard extends AppCompatActivity
 {
     private static final String TAG = "";
     TextView tv;
-    long databaseInfo;
     private DatabaseReference database;
 
     @Override

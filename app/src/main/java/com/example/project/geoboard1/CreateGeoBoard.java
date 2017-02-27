@@ -10,8 +10,6 @@ import android.widget.Toast;
 public class CreateGeoBoard extends AppCompatActivity
 {
     EditText title, subject, message;
-    Bundle retrievingBundle;
-    Bundle passingBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,8 +20,6 @@ public class CreateGeoBoard extends AppCompatActivity
         title = (EditText)findViewById(R.id.geoBoardTitleEditText);
         subject = (EditText)findViewById(R.id.geoBoardSubjectEditText);
         message = (EditText)findViewById(R.id.geoBoardMessageTextArea);
-
-        retrievingBundle = getIntent().getExtras();
     }
 
 
@@ -53,18 +49,15 @@ public class CreateGeoBoard extends AppCompatActivity
         {
             sendToSecurityChoiceActivity = true;
         }
-        MainActivity main = new MainActivity();
 
-        // TODO also needs to choose security setting and apply it before saving
         if(sendToSecurityChoiceActivity)
         {
-            passingBundle = new Bundle();
-            passingBundle.putString("location", retrievingBundle.getString("location"));
-            passingBundle.putString("title", saveTitle);
-            passingBundle.putString("subject", saveSubject);
-            passingBundle.putString("message", saveMessage);
+            MessageDetails m = (MessageDetails)getApplicationContext();
+            m.setTitle(saveTitle);
+            m.setSubject(saveSubject);
+            m.setMessage(saveMessage);
+
             Intent i = new Intent(getApplicationContext(), SecurityChoiceActivity.class);
-            i.putExtras(passingBundle);
 
             startActivity(i);
         }

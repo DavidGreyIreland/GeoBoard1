@@ -34,22 +34,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng currentLocation;
     private GoogleMap mMap;
     private Marker currentLocationMarker;
-    Button buttonCreateGeoBoard;
-    Button buttonViewGeoBoard;
     Button buttonLogout;
     FirebaseAuth firebaseAuth;
-    Bundle passingBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
         buttonLogout = (Button)findViewById(R.id.buttonLogout);
+
         // initializes firebase object
         firebaseAuth = firebaseAuth.getInstance();
     }
@@ -188,12 +188,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         String location = "lat" + getLat() + "lon" + getLon();
 
-        passingBundle = new Bundle();
-        passingBundle.putString("location", location);
+        MessageDetails m = (MessageDetails)getApplicationContext();
+        m.setLocation(location);
+        m.setUserId(firebaseAuth.getCurrentUser().getUid());
 
         Intent i = new Intent(getApplicationContext(), CreateGeoBoard.class);
-        i.putExtras(passingBundle);
-
         startActivity(i);
     }
 

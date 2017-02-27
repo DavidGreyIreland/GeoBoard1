@@ -9,7 +9,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -22,8 +21,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
     TextView textViewUserEmail;
     FirebaseAuth firebaseAuth;
     Bundle retrievingBundle;
-    Bundle passingBundle;
-    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
+    private String location, title, subject, userMessage, currentUser;
     private DatabaseReference geoBoardRef;
 
     /***************************************************************************************/
@@ -52,8 +50,8 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
         }
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-
         textViewUserEmail.setText("welcome " + user.getEmail());
+        //textViewUserEmail.setText(m.getLocation());
     }
 
 
@@ -85,15 +83,16 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             if(radioButtonSecurityResult.equals("Security Setting (None)"))
             {
                 finish();
+                MessageDetails m = (MessageDetails)getApplicationContext();
 
                 //get an instance of the firebaseAuth
                 firebaseAuth = firebaseAuth.getInstance();
                 retrievingBundle = getIntent().getExtras();
-                title = retrievingBundle.getString("title");
-                subject = retrievingBundle.getString("subject");
-                userMessage = retrievingBundle.getString("message");
-                location = retrievingBundle.getString("location");
-                currentUser = firebaseAuth.getCurrentUser().getUid();
+                title = m.getTitle();
+                subject = m.getSubject();
+                userMessage = m.getMessage();
+                location = m.getLocation();
+                currentUser = m.getUserId();
 /*
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
 
@@ -123,16 +122,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             {
                 finish();
 
-                retrievingBundle = getIntent().getExtras();
-
-                passingBundle = new Bundle();
-                passingBundle.putString("location", retrievingBundle.getString("location"));
-                passingBundle.putString("title", retrievingBundle.getString("title"));
-                passingBundle.putString("subject", retrievingBundle.getString("subject"));
-                passingBundle.putString("message", retrievingBundle.getString("message"));
-
                 Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
-                i.putExtras(passingBundle);
 
                 startActivity(i);
             }

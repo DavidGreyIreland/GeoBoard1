@@ -15,11 +15,8 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -29,14 +26,10 @@ public class NfcSecurity extends AppCompatActivity
 {
     NfcAdapter nfcAdapter;
     Random r = new Random();
-    private Context context;
     private Vibrator v;
-    Bundle retrievingBundle;
     private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
-
-    //private FirebaseDatabase database;
+    private MessageDetails m;
     private DatabaseReference geoBoardRef;
-    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,11 +37,11 @@ public class NfcSecurity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc_security);
 
+        m = (MessageDetails)getApplicationContext();
+
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        retrievingBundle = getIntent().getExtras();
-        title = retrievingBundle.getString("title");
     }
 
 
@@ -101,8 +94,7 @@ public class NfcSecurity extends AppCompatActivity
     // creates a unique NFC ID/Location ID
     private String createNFCLocationId()
     {
-        retrievingBundle = getIntent().getExtras();
-        location = retrievingBundle.getString("location");
+        location = m.getLocation();
 
         // removed '.' with '-'
         String enhancedLocation = location.replace(".", "-");
@@ -120,8 +112,6 @@ public class NfcSecurity extends AppCompatActivity
     // creates a unique location ID
     private String createMessageId()
     {
-        retrievingBundle = getIntent().getExtras();
-
         final int min = 1000000;
         final int max = 10000000;
         int randomNumber = r.nextInt((max - min) + 1) + min;
@@ -258,13 +248,13 @@ public class NfcSecurity extends AppCompatActivity
 
     public void saveToDatabase()
     {
-        //get an instance of the firebaseAuth
-        firebaseAuth = firebaseAuth.getInstance();
-        retrievingBundle = getIntent().getExtras();
-        title = retrievingBundle.getString("title");
-        subject = retrievingBundle.getString("subject");
-        userMessage = retrievingBundle.getString("message");
-        currentUser = firebaseAuth.getCurrentUser().getUid();
+        m = (MessageDetails)getApplicationContext();
+
+        title = m.getTitle();
+        subject = m.getSubject();
+        userMessage = m.getMessage();
+        location = m.getLocation();
+        currentUser = m.getUserId();
 /*
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
 
