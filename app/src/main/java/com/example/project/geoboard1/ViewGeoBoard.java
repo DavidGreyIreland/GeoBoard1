@@ -41,6 +41,7 @@ public class ViewGeoBoard extends AppCompatActivity
                     output += "Title: " + title + "\tLocation: " + location + "\n";
                 }
 
+
                 tv.setText(output);
             }
             @Override
