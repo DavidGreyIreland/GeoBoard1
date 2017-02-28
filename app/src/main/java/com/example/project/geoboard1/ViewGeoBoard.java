@@ -25,7 +25,7 @@ public class ViewGeoBoard extends AppCompatActivity
         tv = (TextView)findViewById(R.id.textView);
 
 
-        database = FirebaseDatabase.getInstance().getReference();
+        database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
 
         database.addListenerForSingleValueEvent(new ValueEventListener()
         {
@@ -35,8 +35,8 @@ public class ViewGeoBoard extends AppCompatActivity
                 String output = "";
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
-                    String title = snapshot.child("title").getValue(String.class);
-                    String location = snapshot.child("location").getValue(String.class);
+                    String title = snapshot.child("Title").getValue(String.class);
+                    String location = snapshot.child("Location").getValue(String.class);
 
                     output += "Title: " + title + "\tLocation: " + location + "\n";
                 }

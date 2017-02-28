@@ -15,11 +15,15 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 public class NfcSecurity extends AppCompatActivity
@@ -27,7 +31,7 @@ public class NfcSecurity extends AppCompatActivity
     NfcAdapter nfcAdapter;
     Random r = new Random();
     private Vibrator v;
-    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser;
+    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser, nfcId, securityType;
     private MessageDetails m;
     private DatabaseReference geoBoardRef;
 
@@ -85,14 +89,14 @@ public class NfcSecurity extends AppCompatActivity
         {
             Toast.makeText(this, "NfcIntent!", Toast.LENGTH_SHORT).show();
             Tag t = i.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            NdefMessage message = createNdefMessage(createNFCLocationId());
+            NdefMessage message = createNdefMessage(createNFCId());
 
             writeMessage(t, message);
         }
     }
 
     // creates a unique NFC ID/Location ID
-    private String createNFCLocationId()
+    private String createNFCId()
     {
         location = m.getLocation();
 
@@ -103,14 +107,14 @@ public class NfcSecurity extends AppCompatActivity
         int randomNumber = r.nextInt((max - min) + 1) + min;
 
         // NFC defines which security feature to use when reading GeoBoards.
-        geoBoardId = randomNumber + ":" + enhancedLocation + ":NFC";
+        geoBoardId = randomNumber + ":" + enhancedLocation;
 
         // this should give : "14328:lat105-123lon85-321:NFC"
         return geoBoardId;
     }
 
     // creates a unique location ID
-    private String createMessageId()
+    private void createMessageId()
     {
         final int min = 1000000;
         final int max = 10000000;
@@ -118,8 +122,6 @@ public class NfcSecurity extends AppCompatActivity
 
         // NFC defines which security feature to use when reading GeoBoards.
         messageId = "messageId" + randomNumber;
-
-        return messageId;
     }
 
 
@@ -132,7 +134,7 @@ public class NfcSecurity extends AppCompatActivity
             if(ndefF == null)
             {
                 Toast.makeText(this, "Tag isn't formatable", Toast.LENGTH_SHORT).show();
-                createNFCLocationId();
+                createNFCId();
             }
 
             ndefF.connect();
@@ -255,27 +257,21 @@ public class NfcSecurity extends AppCompatActivity
         userMessage = m.getMessage();
         location = m.getLocation();
         currentUser = m.getUserId();
-/*
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
+        nfcId = createNFCId();
+        securityType = m.getSecurityType();
 
-        // perfect
-        geoBoardRef.child("Messages").child(messageId).child("message").setValue(userMessage);
-        geoBoardRef.child("Messages").child(messageId).child("securityType").setValue("NFC");
+        geoBoardRef.child("Messages").child(messageId).child("Message").setValue(userMessage);
+        geoBoardRef.child("Messages").child(messageId).child("Title").setValue(title);
+        geoBoardRef.child("Messages").child(messageId).child("Subject").setValue(subject);
+        geoBoardRef.child("Messages").child(messageId).child("Location").setValue(location);
 
-        //geoBoardRef.child("Users").child(currentUser).child("userId").setValue(currentUser);
-        geoBoardRef.child("Users").child(currentUser).child("locationId").setValue(geoBoardId);
-        geoBoardRef.child("Users").child(currentUser).child("messageId").setValue(messageId);
-*/
-
-        // Write a message to the database
-        geoBoardRef = FirebaseDatabase.getInstance().getReference(geoBoardId);
-
-                // sets geoBoardId for child Strings
-                geoBoardRef.child("location").setValue(location);
-                geoBoardRef.child("message").setValue(userMessage);
-                geoBoardRef.child("userId").setValue(currentUser);
-                geoBoardRef.child("title").setValue(title);
-                geoBoardRef.child("subject").setValue(subject);
+        Map user = new HashMap();
+        user.put("Location Id", location);
+        user.put("Message Id", messageId);
+        user.put("Security Type", securityType);
+        user.put("Nfc Id", nfcId);
+        geoBoardRef.child("Users").child(m.getUserId()).push().setValue(user);
 
         Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, MapsActivity.class));
