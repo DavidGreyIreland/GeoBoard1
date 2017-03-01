@@ -27,6 +27,7 @@ public class ViewGeoBoard extends AppCompatActivity
 
         database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
 
+
         database.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
