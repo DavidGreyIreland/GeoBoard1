@@ -1,10 +1,17 @@
 package com.example.project.geoboard1;
 
 import android.app.Application;
+import android.content.Context;
+import android.os.Vibrator;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -23,7 +30,9 @@ public class MessageDetails extends Application
     String messageId;
     String nfcId = "NFC";
     Random r = new Random();
-    private DatabaseReference databaseRef;
+    private DatabaseReference geoBoardRef;
+    FirebaseAuth firebaseAuth;
+    private Vibrator v;
 
     // creates a unique location ID
     public String messageId()
@@ -54,28 +63,64 @@ public class MessageDetails extends Application
         return locationId;
     }
 
+    public void saveUserDatabase()
+    {
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        if(securityType.equals("NFC"))
+        {
+            geoBoardRef = FirebaseDatabase.getInstance().getReference();
+            Map user = new HashMap();
+            user.put("Location Id", location);
+            user.put("Message Id", messageId);
+            user.put("Security Type", securityType);
+            user.put("Nfc Id", nfcId);
+            geoBoardRef.child("Users").child(userId).push().setValue(user);
+            Toast.makeText(this, "NFC worked", Toast.LENGTH_SHORT).show();
+        }
+
+        if(securityType.equals("NONE"))
+        {
+            geoBoardRef = FirebaseDatabase.getInstance().getReference();
+            Map user = new HashMap();
+            user.put("Location Id", location);
+            user.put("Message Id", messageId);
+            user.put("Security Type", securityType);
+            user.put("Nfc Id", "N/A");
+            geoBoardRef.child("Users").child(userId).push().setValue(user);
+            Toast.makeText(this, "NONE worked", Toast.LENGTH_SHORT).show();
+        }
+
+        if(v.hasVibrator())
+        {
+            v.vibrate(500);
+        }
+    }
+
     // saves to the database
     public void saveToDatabase()
     {
-        databaseRef = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = firebaseAuth.getInstance();
+        title = getTitle();
+        subject = getSubject();
+        message = getMessage();
+        location = getLocation();
+        userId = getUserId();
+        nfcId = getNfcId();
+        securityType = getSecurityType();
+        messageId = messageId();
+        FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+        geoBoardRef = FirebaseDatabase.getInstance().getReference();
 
-        messageId();
-        locationId();
+        geoBoardRef.child("Messages").child(messageId).child("Message").setValue(message);
+        geoBoardRef.child("Messages").child(messageId).child("Title").setValue(title);
+        geoBoardRef.child("Messages").child(messageId).child("Subject").setValue(subject);
+        geoBoardRef.child("Messages").child(messageId).child("Location").setValue(location);
+        geoBoardRef.child("Messages").child(messageId).child("User").setValue(userFirebase.getEmail());
 
-        // perfect
-        databaseRef.child("Messages").child(messageId).child("message").setValue(getMessage());
-        databaseRef.child("Messages").child(messageId).child("securityType").setValue(securityType);
-        DatabaseReference dMessageId = databaseRef.child("Messages").child(messageId);
-        //databaseRef.child("Users").child(getUserId()).child("locationId").setValue(locationId());
-        //databaseRef.child("Users").child(getUserId()).child("messageId").setValue(messageId());
-        //databaseRef.child("Users").child(getUserId()).push().child("locationId").setValue(locationId);
-        //databaseRef.child("Users").child(getUserId()).push().child("messageId").setValue(messageId);
-        UsersDatabase u = new UsersDatabase(locationId, messageId, nfcId);
+        saveUserDatabase();
 
-        databaseRef.child("Users").child(getUserId()).push().setValue(u);
-        //Map<String, UsersDatabase> users = new HashMap<>();
-        //users.put("User",new UsersDatabase(locationId, messageId));
-        //usersRef.setValue(users);
+        Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
     }
 
     public String getTitle()

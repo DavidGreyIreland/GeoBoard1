@@ -1,7 +1,6 @@
 package com.example.project.geoboard1;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -11,29 +10,24 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
 public class NfcSecurity extends AppCompatActivity
 {
     NfcAdapter nfcAdapter;
     Random r = new Random();
-    private Vibrator v;
-    private String location, geoBoardId, messageId, title, subject, userMessage, currentUser, nfcId, securityType;
+    private String location, geoBoardId, messageId;
     private MessageDetails m;
-    private DatabaseReference geoBoardRef;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,10 +36,8 @@ public class NfcSecurity extends AppCompatActivity
         setContentView(R.layout.activity_nfc_security);
 
         m = (MessageDetails)getApplicationContext();
-
-
+        firebaseAuth = firebaseAuth.getInstance();
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 
@@ -189,15 +181,8 @@ public class NfcSecurity extends AppCompatActivity
                 if(tagWritten)
                 {
                     createMessageId();
-                    saveToDatabase();
-
-                    /******************************************************************************************************/
-                    /************************************* Vibrate when tag is written ************************************/
-                    /******************************************************************************************************/
-                    if(v.hasVibrator())
-                    {
-                        v.vibrate(500);
-                    }
+                    m.setSecurityType("NFC");
+                    m.saveToDatabase();
 
                     Toast.makeText(this, "Tag is written", Toast.LENGTH_SHORT).show();
                     finish();
@@ -246,34 +231,5 @@ public class NfcSecurity extends AppCompatActivity
                         record
                 });
         return message;
-    }
-
-    public void saveToDatabase()
-    {
-        m = (MessageDetails)getApplicationContext();
-
-        title = m.getTitle();
-        subject = m.getSubject();
-        userMessage = m.getMessage();
-        location = m.getLocation();
-        currentUser = m.getUserId();
-        geoBoardRef = FirebaseDatabase.getInstance().getReference();
-        nfcId = createNFCId();
-        securityType = m.getSecurityType();
-
-        geoBoardRef.child("Messages").child(messageId).child("Message").setValue(userMessage);
-        geoBoardRef.child("Messages").child(messageId).child("Title").setValue(title);
-        geoBoardRef.child("Messages").child(messageId).child("Subject").setValue(subject);
-        geoBoardRef.child("Messages").child(messageId).child("Location").setValue(location);
-
-        Map user = new HashMap();
-        user.put("Location Id", location);
-        user.put("Message Id", messageId);
-        user.put("Security Type", securityType);
-        user.put("Nfc Id", nfcId);
-        geoBoardRef.child("Users").child(m.getUserId()).push().setValue(user);
-
-        Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, MapsActivity.class));
     }
 }
