@@ -179,7 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void viewGeoBoard(View v)
     {
         finish();
-        startActivity(new Intent(getApplication(), ViewGeoBoard.class));
+        startActivity(new Intent(getApplication(), UserMessageListActivity.class));
     }
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.project.geoboard1.MainActivity">
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="My GeoBoards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageBoardHeading"
+        android:textSize="35sp"
+        android:textAlignment="center"
+        android:background="@drawable/background_message_image3"
+        android:paddingTop="30dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/recyclerview_message_list"
+        android:layout_marginTop="135dp"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

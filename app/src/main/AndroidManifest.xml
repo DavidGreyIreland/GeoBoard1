@@ -45,6 +45,8 @@
         </activity>
         <activity android:name=".CreateGeoBoard">
         </activity>
+        <activity android:name=".UserMessageListActivity">
+        </activity>
         <activity android:name=".ViewGeoBoard">
         </activity>
 

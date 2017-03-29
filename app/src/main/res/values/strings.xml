@@ -24,4 +24,5 @@
     <string name="geoBoardTitleHint">Add title here:</string>
     <string name="geoBoardSubjectHint">Add subject here:</string>
     <string name="nfcTagImage">Tap NFC Tag:</string>
+    <string name="genericImage">generic image</string>
 </resources>
