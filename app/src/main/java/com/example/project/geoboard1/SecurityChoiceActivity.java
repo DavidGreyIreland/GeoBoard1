@@ -95,16 +95,6 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
                 m.setSecurityType("NONE");
                 m.saveToDatabase();
 
-/*
-                // Write a message to the database
-                geoBoardRef = FirebaseDatabase.getInstance().getReference("asdf");
-
-                // sets geoBoardId for child Strings
-                geoBoardRef.child("location").setValue(location);
-                geoBoardRef.child("message").setValue(userMessage);
-                geoBoardRef.child("userId").setValue(currentUser);
-                geoBoardRef.child("title").setValue(title);
-                geoBoardRef.child("subject").setValue(subject);*/
 
                 Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MapsActivity.class));

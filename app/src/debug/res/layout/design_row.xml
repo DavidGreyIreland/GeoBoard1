@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/card_view"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,7 +20,8 @@
             android:maxLines="3"
             android:text="Post title here!"
             android:textSize="20sp"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            tools:ignore="HardcodedText"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -28,7 +30,8 @@
             android:maxLines="3"
             android:text="Post subject here!"
             android:textSize="20sp"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            tools:ignore="HardcodedText"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -37,6 +40,7 @@
             android:maxLines="3"
             android:text="Post location here!"
             android:textSize="20sp"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            tools:ignore="HardcodedText"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
