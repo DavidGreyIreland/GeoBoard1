@@ -14,7 +14,8 @@
               android:name="com.google.android.gms.maps.SupportMapFragment"
               android:layout_width="match_parent"
               tools:context="com.example.project.mappracticeproject.MapsActivity"
-              android:layout_height="520dp"/>
+              android:layout_height="520dp"
+              tools:layout="@layout/activity_maps"/>
 
     <LinearLayout
         android:orientation="horizontal"

@@ -6,17 +6,28 @@ package com.example.project.geoboard1;
 
 public class ModelClass
 {
-    String title, subject, location;
+    String title, subject, location, user;
 
     public ModelClass()
     {
     }
 
-    public ModelClass(String title, String subject, String location)
+    public ModelClass(String title, String subject, String location, String user)
     {
         this.title = title;
         this.subject = subject;
         this.location = location;
+        this.user = user;
+    }
+
+    public String getUser()
+    {
+        return user;
+    }
+
+    public void setUser(String user)
+    {
+        this.user = user;
     }
 
     public String getTitle()

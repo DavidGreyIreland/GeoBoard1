@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,9 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 public class UserMessageListActivity extends AppCompatActivity
 {
 
-    private RecyclerView mBlogList;
+    private RecyclerView recyclerView;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference databaseRef;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,12 +34,11 @@ public class UserMessageListActivity extends AppCompatActivity
         setContentView(R.layout.user_message_list);
 
         // RecyclerView
-        mBlogList = (RecyclerView)findViewById(R.id.recyclerview_message_list);
-        mBlogList.setHasFixedSize(true);
-        mBlogList.setLayoutManager(new LinearLayoutManager(this));
-        //database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fir-cards-c9925.firebaseio.com/");
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_message_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         database = FirebaseDatabase.getInstance();
-        myRef = database.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages/");
+        databaseRef = database.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages/");
 
     }
 
@@ -49,27 +51,39 @@ public class UserMessageListActivity extends AppCompatActivity
                 ModelClass.class,
                 R.layout.design_row,
                 MessageListViewHolder.class,
-                myRef)
+                databaseRef)
         {
             @Override
             protected void populateViewHolder(MessageListViewHolder viewHolder, ModelClass model, int position)
             {
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setSubject(model.getSubject());
-                viewHolder.setLocation(model.getLocation());
+                firebaseAuth = firebaseAuth.getInstance();
+                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+                String firebaseCurrentUser = userFirebase.getEmail();
+
+                if(!model.getUser().equals(firebaseCurrentUser))
+                {
+                    viewHolder.setTitle(model.getTitle());
+                    viewHolder.setSubject(model.getSubject());
+                    viewHolder.setLocation(model.getLocation());
+                    //MessageListViewHolder.removeAt(position);
+                    //notifyItemRemoved(position);
+                }
             }
         };
-        mBlogList.setAdapter(firebaseRecyclerAdapter);
+        recyclerView.setAdapter(firebaseRecyclerAdapter);
     }
 
-    // viewholder for recyclerView
+
+    // TODO update recyclerview to show only relevant user data
     public static class MessageListViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
+
         public MessageListViewHolder(View itemView)
         {
             super(itemView);
             mView = itemView;
+
             itemView.setOnClickListener(new View.OnClickListener()
             {
 
@@ -82,6 +96,12 @@ public class UserMessageListActivity extends AppCompatActivity
                 }
             });
         }
+
+       /* public static void removeAt(int position)
+        {
+            myDataset.remove(position);
+        }*/
+
 
         public void setTitle(String title)
         {
@@ -100,5 +120,11 @@ public class UserMessageListActivity extends AppCompatActivity
             TextView post_title = (TextView)mView.findViewById(R.id.location);
             post_title.setText("Location:         " + location);
         }
+
+/*        @Override
+        public Filter getFilter()
+        {
+            return null;
+        }*/
     }
 }
