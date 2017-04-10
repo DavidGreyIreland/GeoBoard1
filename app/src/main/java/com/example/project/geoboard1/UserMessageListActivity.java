@@ -59,8 +59,9 @@ public class UserMessageListActivity extends AppCompatActivity
                 firebaseAuth = firebaseAuth.getInstance();
                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
                 String firebaseCurrentUser = userFirebase.getEmail();
+                String user = model.getUser();
 
-                if(!model.getUser().equals(firebaseCurrentUser))
+                if(user.equals(firebaseCurrentUser))
                 {
                     viewHolder.setTitle(model.getTitle());
                     viewHolder.setSubject(model.getSubject());

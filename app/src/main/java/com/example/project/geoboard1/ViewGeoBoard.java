@@ -75,6 +75,7 @@ public class ViewGeoBoard extends AppCompatActivity
             {
                 return data;
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError)
             {

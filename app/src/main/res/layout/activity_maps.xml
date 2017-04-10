@@ -7,6 +7,17 @@
     android:orientation="vertical"
     tools:context="com.example.project.geoboard1.MapsActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewLocation"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:text="sample location text"/>
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:map="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +25,7 @@
               android:name="com.google.android.gms.maps.SupportMapFragment"
               android:layout_width="match_parent"
               tools:context="com.example.project.mappracticeproject.MapsActivity"
-              android:layout_height="520dp"
+              android:layout_height="490dp"
               tools:layout="@layout/activity_maps"/>
 
     <LinearLayout
