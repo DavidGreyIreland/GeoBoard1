@@ -211,10 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.geoboardlogo2)));
         currentLocationMarker = mMap.addMarker(new MarkerOptions()
                 .position(currentLocation)
-                // TODO add all saved GeoBoards and use the drawable to the geoboardlogo2 image
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.person))
-                // TODO set the title to the title of the Geo-Board that represents that location
-                // TODO set the snippet with the about info of the Geo-Board set for this location
                 .title("GeoBoardTitle")
                 .snippet("Click to Open"));
         currentLocationMarker.showInfoWindow();

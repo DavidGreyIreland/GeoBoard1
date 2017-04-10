@@ -20,7 +20,6 @@
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key"/>
-
     <meta-data
         android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version"/>
@@ -67,6 +66,8 @@
             android:label="@string/title_activity_maps">
         </activity>
         <activity android:name=".NfcSecurity">
+        </activity>
+        <activity android:name=".CurrentUsersMessage">
         </activity>
     </application>
 

@@ -111,8 +111,8 @@ public class MessageDetails extends Application
         messageId = messageId();
         FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
-userFirebase.getUid();
-        geoBoardRef.child("Messages").child(messageId).child("message").setValue(message);
+        userFirebase.getUid();
+        geoBoardRef.child("Messages").child(messageId).child("message").push().setValue(message);
         geoBoardRef.child("Messages").child(messageId).child("title").setValue(title);
         geoBoardRef.child("Messages").child(messageId).child("subject").setValue(subject);
         geoBoardRef.child("Messages").child(messageId).child("location").setValue(location);
