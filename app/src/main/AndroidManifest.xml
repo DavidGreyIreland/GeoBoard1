@@ -48,6 +48,8 @@
         </activity>
         <activity android:name=".CurrentUsersMessage">
         </activity>
+        <activity android:name=".AddGeoBoard">
+        </activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -68,6 +70,8 @@
         <activity android:name=".NfcSecurity">
         </activity>
         <activity android:name=".CurrentUsersMessage">
+        </activity>
+        <activity android:name=".AddGeoBoard">
         </activity>
     </application>
 

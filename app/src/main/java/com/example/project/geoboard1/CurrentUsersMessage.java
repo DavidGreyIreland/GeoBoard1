@@ -1,8 +1,11 @@
 package com.example.project.geoboard1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +23,14 @@ public class CurrentUsersMessage extends AppCompatActivity
     MessageDetails m;
     DatabaseReference messageBoardDetails;
     String msgDetails;
-
+    Button addMessageButton;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_users_message);
 
+        addMessageButton= (Button)findViewById(R.id.addMessageButton);
         listView = (ListView) findViewById(R.id.listView);
         messageBoardHeading = (TextView)findViewById(R.id.messageBoardHeading);
         m = (MessageDetails)getApplicationContext();
@@ -94,5 +98,11 @@ public class CurrentUsersMessage extends AppCompatActivity
         ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(this, R.layout.single_row_list_view, R.id.textViewUserName, listViewArray);
         listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(listViewAdapter);
+    }
+
+    public void addMessageButton(View view)
+    {
+        finish();
+        startActivity(new Intent(this, AddGeoBoard.class));
     }
 }
