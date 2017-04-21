@@ -26,6 +26,10 @@
     <string name="nfcTagImage">Tap NFC Tag:</string>
     <string name="genericImage">generic image</string>
     <string name="my_geoboards">My GeoBoards</string>
+    <string name="my_geoboard">My GeoBoard</string>
     <string name="location">location</string>
     <string name="subject">subject</string>
+    <string name="textViewUserName">username</string>
+    <string name="multiLineTextViewMessage">message goes here!!!</string>
+    <string name="AddMessageButton">Add Message</string>
 </resources>

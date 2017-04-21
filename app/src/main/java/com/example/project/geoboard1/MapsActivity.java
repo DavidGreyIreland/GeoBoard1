@@ -43,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Marker currentLocationMarker;
     Button buttonLogout;
+    String markerSecurityType;
     private DatabaseReference database;
     private FirebaseAuth firebaseAuth;
     TextView textViewLocation;
@@ -150,41 +151,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ArrayList<String> titleLists = new ArrayList<String>();
                 ArrayList<String> subjectLists = new ArrayList<String>();
 
-                firebaseAuth = firebaseAuth.getInstance();
-                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-                String output = "";
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
-                    String firebaseCurrentUser = userFirebase.getEmail();
-                    String user = snapshot.child("user").getValue(String.class);
+                    /************************************** location markers *******************************/
+                    int latStart, latEnd, lonStart, lonEnd;
+                    String lat, lon;
+                    String location = snapshot.child("location").getValue(String.class);
+                    latStart = 3;
+                    latEnd = location.indexOf('o') - 1;
+                    lonStart = location.indexOf('n') + 1;
+                    lonEnd = location.length();
+                    lat = location.substring(latStart, latEnd);
+                    lon = location.substring(lonStart, lonEnd);
+                    locationLists.add(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)));
 
-                    // allows for only currently logged in users location of messages to be used
-                    if(user.equals(firebaseCurrentUser))
-                    {
-                        /************************************** location markers *******************************/
-                        int latStart, latEnd, lonStart, lonEnd;
-                        String lat, lon;
-                        String location = snapshot.child("location").getValue(String.class);
-                        latStart = 3;
-                        latEnd = location.indexOf('o')-1;
-                        lonStart = location.indexOf('n') + 1;
-                        lonEnd = location.length();
-                        lat = location.substring(latStart, latEnd);
-                        lon = location.substring(lonStart, lonEnd);
-                        locationLists.add(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)));
+                    /************************************** title markers *******************************/
+                    String title = snapshot.child("title").getValue(String.class);
+                    titleLists.add("Title: " + title);
 
-                        /************************************** title markers *******************************/
-                        String title = snapshot.child("title").getValue(String.class);
-                        titleLists.add("Title: " + title);
-
-                        /************************************** subject markers *******************************/
-                        String subject = snapshot.child("title").getValue(String.class);
-                        subjectLists.add("Subject: " + subject);
-                    }
+                    /************************************** subject markers *******************************/
+                    String subject = snapshot.child("title").getValue(String.class);
+                    subjectLists.add("Subject: " + subject);
                 }
 
-                for(int i = 0; i < locationLists.size(); i++)
+                for (int i = 0; i < locationLists.size(); i++)
                 {
                     mMap.addMarker(new MarkerOptions()
                             .position(locationLists.get(i))
@@ -194,7 +184,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.setOnMarkerClickListener(MapsActivity.this);
                 }
 
-                Toast.makeText(MapsActivity.this, "Location size: " + locationLists.size(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -251,22 +240,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    // TODO two types of markers, the person marker shows where the user is walking, the Geo-Board marker shows available Geo-Boards
+    /****************************************************************************************************************/
+    /***************** if within location of marker, appropriate security activity is called ************************/
+    /****************************************************************************************************************/
     @Override
     public boolean onMarkerClick(Marker marker)
     {
-        if(marker.equals(currentLocationMarker))
+        // checks if the current location is within range of the desired marker
+        if(marker.getPosition().latitude - currentLocationMarker.getPosition().latitude < 0.05 && marker.getPosition().longitude - currentLocationMarker.getPosition().longitude < 0.05 )
         {
-            // TODO set a startActivity() instead of the toast to start the creation of the Geo-Board
-            Toast.makeText(this, "you clicked this marker", Toast.LENGTH_SHORT).show();
+            MessageDetails m = (MessageDetails)getApplicationContext();
+            markerSecurityType = m.getMarkerOnClickSecurityType(marker.getPosition().latitude, marker.getPosition().longitude);
         }
 
-        if(marker.getTitle().equals("hags"))
+        if(markerSecurityType.equals("NONE"))
         {
-            // TODO set a startActivity() instead of the toast to start the creation of the Geo-Board
-            Toast.makeText(this, "you clicked this marker ... hags", Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(this, "going to none security", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(), CurrentUsersMessage.class);
+            //  TODO must call m.messageBoardLocation from MessageDetails
+            startActivity(i);
+            finish();
 
+        }
+        else if(markerSecurityType.equals("NFC"))
+        {
+            Toast.makeText(this, "going to nfc security", Toast.LENGTH_SHORT).show();
+
+            Intent i = new Intent(getApplicationContext(), CurrentUsersMessage.class);
+            //  TODO must call m.messageBoardLocation from MessageDetails
+            //startActivity(i);
+        }
         return false;
     }
 

@@ -7,8 +7,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +33,7 @@ public class MessageDetails extends Application
     String messageId;
     String nfcId = "NFC";
     Random r = new Random();
-    private DatabaseReference geoBoardRef;
+    DatabaseReference geoBoardRef, messageBoardDetails, currentMessageDR;
     FirebaseAuth firebaseAuth;
     private Vibrator v;
 
@@ -85,8 +88,6 @@ public class MessageDetails extends Application
             Map user = new HashMap();
             user.put("Location Id", location);
             user.put("Message Id", messageId);
-            user.put("Security Type", securityType);
-            user.put("Nfc Id", "N/A");
             geoBoardRef.child("Users").child(userId).push().setValue(user);
             Toast.makeText(this, "NONE worked", Toast.LENGTH_SHORT).show();
         }
@@ -100,6 +101,7 @@ public class MessageDetails extends Application
     // saves to the database
     public void saveToDatabase()
     {
+        String currentMessageDetails;
         firebaseAuth = firebaseAuth.getInstance();
         title = getTitle();
         subject = getSubject();
@@ -112,15 +114,89 @@ public class MessageDetails extends Application
         FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
         geoBoardRef = FirebaseDatabase.getInstance().getReference();
         userFirebase.getUid();
-        geoBoardRef.child("Messages").child(messageId).child("message").push().setValue(message);
+
+        currentMessageDR = geoBoardRef.child("Messages").child(messageId).child("message").push();
+        currentMessageDR.setValue(message);
+
+        // this gets the .push() id
+        //currentMessageDetails = currentMessageDR.getKey();
+
+        currentMessageDR.child("msg").setValue(message);
+        currentMessageDR.child("user").setValue(userFirebase.getEmail());
+        //geoBoardRef.child("Messages").child(messageId).child("message").child(currentMessageDetails).child("user").setValue(userFirebase.getEmail());
         geoBoardRef.child("Messages").child(messageId).child("title").setValue(title);
         geoBoardRef.child("Messages").child(messageId).child("subject").setValue(subject);
         geoBoardRef.child("Messages").child(messageId).child("location").setValue(location);
-        geoBoardRef.child("Messages").child(messageId).child("user").setValue(userFirebase.getEmail());
+        geoBoardRef.child("Messages").child(messageId).child("securityType").setValue(securityType);
+        geoBoardRef.child("Messages").child(messageId).child("messageCreator").setValue(userFirebase.getEmail());
+
+        if(securityType.equals("NFC"))
+        {
+            geoBoardRef.child("Messages").child(messageId).child("NFC Id").setValue(nfcId);
+        }
+        else
+        {
+            geoBoardRef.child("Messages").child(messageId).child("NFC Id").setValue("N/A");
+        }
 
         saveUserDatabase();
 
         Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
+    }
+
+    public String getMarkerOnClickSecurityType(double lat, double lng)
+    {
+        // map marker that was clicked location
+        final String locationSearch = "lat" + lat + "lon" + lng;
+
+        geoBoardRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
+
+
+        geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    // each database location
+                    String databaseLocations = snapshot.child("location").getValue(String.class);
+
+                    // comparing database locations with marker location
+                    if(databaseLocations.equals(locationSearch))
+                    {
+                        messageBoardDetails = snapshot.child("location").getRef().getParent();
+                        messageBoardDetails.addValueEventListener(new ValueEventListener()
+                        {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot)
+                            {
+                                securityType = dataSnapshot.child("securityType").getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError)
+                            {
+
+                            }
+                        });
+                    }
+                    else
+                    {
+                        securityType = "Null value!!!";
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+        return securityType;
     }
 
     public String getTitle()

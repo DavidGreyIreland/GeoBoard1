@@ -67,8 +67,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void userLogin()
     {
-        Toast.makeText(this, "button works", Toast.LENGTH_SHORT).show();
-        // .trim() removes spaces in a string
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
