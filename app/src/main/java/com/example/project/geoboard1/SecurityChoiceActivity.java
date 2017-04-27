@@ -80,7 +80,7 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             radioButton = (RadioButton)findViewById(selectedId);
             String radioButtonSecurityResult = radioButton.getText().toString();
 
-            if(radioButtonSecurityResult.equals("Security Setting (None)"))
+            if(radioButtonSecurityResult.equals("Security Setting (Location)"))
             {
                 finish();
                 MessageDetails m = (MessageDetails)getApplicationContext();
@@ -101,11 +101,17 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             }
             else if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
             {
-                finish();
-
                 Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
 
                 startActivity(i);
+                finish();
+            }
+            else if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
+            {
+                Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
+
+                startActivity(i);
+                finish();
             }
         }
     }

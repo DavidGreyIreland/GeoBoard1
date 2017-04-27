@@ -32,7 +32,7 @@
         android:id="@+id/frameLayout"
         app:layout_constraintTop_toTopOf="@+id/fragment5"
         android:layout_marginTop="85dp"
-        app:layout_constraintVertical_bias="0.66"
+        app:layout_constraintVertical_bias="0.65999997"
         android:layout_marginBottom="50dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

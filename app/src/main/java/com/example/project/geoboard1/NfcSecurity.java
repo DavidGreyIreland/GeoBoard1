@@ -79,13 +79,15 @@ public class NfcSecurity extends AppCompatActivity
 
         if(i.hasExtra(NfcAdapter.EXTRA_TAG))
         {
-            Toast.makeText(this, "NfcIntent!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "NfcIntent! Security", Toast.LENGTH_SHORT).show();
+
             Tag t = i.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefMessage message = createNdefMessage(createNFCId());
 
             writeMessage(t, message);
         }
     }
+
 
     // creates a unique NFC ID/Location ID
     private String createNFCId()
@@ -100,7 +102,7 @@ public class NfcSecurity extends AppCompatActivity
 
         // NFC defines which security feature to use when reading GeoBoards.
         geoBoardId = randomNumber + ":" + enhancedLocation;
-
+        m.setNfcId(geoBoardId);
         // this should give : "14328:lat105-123lon85-321:NFC"
         return geoBoardId;
     }
@@ -184,7 +186,7 @@ public class NfcSecurity extends AppCompatActivity
                     m.setSecurityType("NFC");
                     m.saveToDatabase();
 
-                    Toast.makeText(this, "Tag is written", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Tag is written Security", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(this, MapsActivity.class));
                 }

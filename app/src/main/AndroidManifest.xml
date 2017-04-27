@@ -50,6 +50,14 @@
         </activity>
         <activity android:name=".AddGeoBoard">
         </activity>
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity android:name=".NfcSecurity">
+        </activity>
+        <activity android:name=".ReadNFCActivity">
+        </activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -63,15 +71,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
-        <activity android:name=".NfcSecurity">
-        </activity>
-        <activity android:name=".CurrentUsersMessage">
-        </activity>
-        <activity android:name=".AddGeoBoard">
+        <activity android:name=".AccelerometerActivity">
         </activity>
     </application>
 

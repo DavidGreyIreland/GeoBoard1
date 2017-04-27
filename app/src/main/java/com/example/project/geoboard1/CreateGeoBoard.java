@@ -23,12 +23,12 @@ public class CreateGeoBoard extends AppCompatActivity
     }
 
 
-    public void saveGeoBoardInfo(View view)
+    public void saveGeoBoardMessage(View view)
     {
         String saveTitle = title.getText().toString().trim();
         String saveSubject = subject.getText().toString().trim();
         String saveMessage = message.getText().toString().trim();
-        Boolean sendToSecurityChoiceActivity = true;
+        boolean sendToSecurityChoiceActivity = true;
 
         if(saveTitle.equals(null) || saveTitle.equals(""))
         {

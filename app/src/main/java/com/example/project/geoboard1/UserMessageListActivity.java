@@ -58,17 +58,14 @@ public class UserMessageListActivity extends AppCompatActivity
             {
                 firebaseAuth = firebaseAuth.getInstance();
                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-                String firebaseCurrentUser = userFirebase.getEmail();
-                String user = model.getUser();
+                //String firebaseCurrentUser = userFirebase.getEmail();
+                //String user = model.getUser();
 
-                if(user.equals(firebaseCurrentUser))
-                {
-                    viewHolder.setTitle(model.getTitle());
-                    viewHolder.setSubject(model.getSubject());
-                    viewHolder.setLocation(model.getLocation());
-                    //MessageListViewHolder.removeAt(position);
-                    //notifyItemRemoved(position);
-                }
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setSubject(model.getSubject());
+                viewHolder.setLocation(model.getLocation());
+                //MessageListViewHolder.removeAt(position);
+                //notifyItemRemoved(position);
             }
         };
         recyclerView.setAdapter(firebaseRecyclerAdapter);
@@ -121,11 +118,5 @@ public class UserMessageListActivity extends AppCompatActivity
             TextView post_title = (TextView)mView.findViewById(R.id.location);
             post_title.setText("Location:         " + location);
         }
-
-/*        @Override
-        public Filter getFilter()
-        {
-            return null;
-        }*/
     }
 }

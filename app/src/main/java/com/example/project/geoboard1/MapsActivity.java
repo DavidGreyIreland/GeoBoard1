@@ -41,18 +41,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location location;
     LatLng currentLocation;
     private GoogleMap mMap;
-    private Marker currentLocationMarker;
+    private Marker currentLocationMarker, marker;
     Button buttonLogout;
-    String markerSecurityType;
-    private DatabaseReference database;
+    String markerSecurityType, markerPosition, databaseLocations, markerTitle, dbSecurityType;
+    private DatabaseReference database, geoBoardRef, correctMessageReference;
     private FirebaseAuth firebaseAuth;
     TextView textViewLocation;
+    MessageDetails m;
+    private double markerLat, markerLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        m = (MessageDetails)getApplicationContext();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -138,8 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void geoBoardLocations()
     {
         database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
-
-
         database.addListenerForSingleValueEvent(new ValueEventListener()
         {
             MarkerOptions markerOptions;
@@ -156,7 +157,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     /************************************** location markers *******************************/
                     int latStart, latEnd, lonStart, lonEnd;
                     String lat, lon;
-                    String location = snapshot.child("location").getValue(String.class);
+                    String location = "";
+
+                    try
+                    {
+                        location = snapshot.child("location").getValue(String.class);
+                    }catch(Exception e)
+                    {
+                        System.out.println("Locations not found for markers to be added");
+                    }
+
                     latStart = 3;
                     latEnd = location.indexOf('o') - 1;
                     lonStart = location.indexOf('n') + 1;
@@ -197,7 +207,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void currentLocation()
     {
         currentLocation = new LatLng(getLat(), getLon());
-        // mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.geoboardlogo2)));
         currentLocationMarker = mMap.addMarker(new MarkerOptions()
                 .position(currentLocation)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.person))
@@ -246,31 +255,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker)
     {
+        markerLat = marker.getPosition().latitude;
+        markerLng = marker.getPosition().longitude;
+        markerTitle = marker.getTitle();
+
+        m.setMarkerLocation("lat" + markerLat + "lon" + markerLng);
         // checks if the current location is within range of the desired marker
-        if(marker.getPosition().latitude - currentLocationMarker.getPosition().latitude < 0.05 && marker.getPosition().longitude - currentLocationMarker.getPosition().longitude < 0.05 )
+        if(markerLat - currentLocationMarker.getPosition().latitude < 0.05 && markerLng - currentLocationMarker.getPosition().longitude < 0.05 )
         {
-            MessageDetails m = (MessageDetails)getApplicationContext();
-            markerSecurityType = m.getMarkerOnClickSecurityType(marker.getPosition().latitude, marker.getPosition().longitude);
+            geoBoardRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
+            geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    dbSecurityType = "";
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                    {
+                        // each database location of currently clicked messageBoard
+                        databaseLocations = snapshot.child("location").getValue(String.class);
+
+                        // comparing database locations with marker location
+                        if (databaseLocations.equals(m.getMarkerLocation()))
+                        {
+                            dbSecurityType = snapshot.child("securityType").getValue(String.class);
+                        }
+                    }
+                    setSecurityType(dbSecurityType);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(this, "Location Incorrect", Toast.LENGTH_SHORT).show();
         }
 
-        if(markerSecurityType.equals("NONE"))
+        return false;
+    }
+
+    public void setSecurityType(String securityType)
+    {
+        if(securityType.equals("NONE"))
         {
-            Toast.makeText(this, "going to none security", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(getApplicationContext(), CurrentUsersMessage.class);
-            //  TODO must call m.messageBoardLocation from MessageDetails
+            m.setMarkerLocation("lat" + markerLat + "lon" + markerLng);
+            i.putExtra("markerTitle",markerTitle);
+
+            Toast.makeText(this, "none!!!", Toast.LENGTH_SHORT).show();
+
             startActivity(i);
             finish();
-
         }
-        else if(markerSecurityType.equals("NFC"))
+        else if(securityType.equals("NFC"))
         {
-            Toast.makeText(this, "going to nfc security", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(), ReadNFCActivity.class);
+            m.setMarkerLocation("lat" + markerLat + "lon" + markerLng);
 
-            Intent i = new Intent(getApplicationContext(), CurrentUsersMessage.class);
-            //  TODO must call m.messageBoardLocation from MessageDetails
-            //startActivity(i);
+            startActivity(i);
+            finish();
         }
-        return false;
+        else if(securityType.equals("WrongLocation"))
+        {
+            finish();
+            startActivity(new Intent(getApplication(), MapsActivity.class));
+            Toast.makeText(this, "Location Access Incorrect!!!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -287,7 +342,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         String location = "lat" + getLat() + "lon" + getLon();
 
-        MessageDetails m = (MessageDetails)getApplicationContext();
         m.setLocation(location);
         m.setUserId(firebaseAuth.getCurrentUser().getUid());
 

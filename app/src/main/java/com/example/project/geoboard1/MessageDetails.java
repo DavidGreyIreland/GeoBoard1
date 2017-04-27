@@ -26,14 +26,30 @@ public class MessageDetails extends Application
     String title;
     String subject;
     String message;
-    String location;
+    String location, locationSearch;
     String userId;
-    String securityType = "NFC";
+    private String securityType;
     String locationId;
     String messageId;
+
+    String markerLocation;
     String nfcId = "NFC";
+    String databaseLocations;
     Random r = new Random();
-    DatabaseReference geoBoardRef, messageBoardDetails, currentMessageDR;
+    DatabaseReference geoBoardRef;
+
+    public DatabaseReference getCorrectMessageReference()
+    {
+        return correctMessageReference;
+    }
+
+    public void setCorrectMessageReference(DatabaseReference correctMessageReference)
+    {
+        this.correctMessageReference = correctMessageReference;
+    }
+
+    DatabaseReference correctMessageReference;
+    DatabaseReference currentMessageDR;
     FirebaseAuth firebaseAuth;
     private Vibrator v;
 
@@ -79,7 +95,7 @@ public class MessageDetails extends Application
             user.put("Security Type", securityType);
             user.put("Nfc Id", nfcId);
             geoBoardRef.child("Users").child(userId).push().setValue(user);
-            Toast.makeText(this, "NFC worked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "NFC worked Message Details", Toast.LENGTH_SHORT).show();
         }
 
         if(securityType.equals("NONE"))
@@ -117,13 +133,9 @@ public class MessageDetails extends Application
 
         currentMessageDR = geoBoardRef.child("Messages").child(messageId).child("message").push();
         currentMessageDR.setValue(message);
-
-        // this gets the .push() id
-        //currentMessageDetails = currentMessageDR.getKey();
-
         currentMessageDR.child("msg").setValue(message);
         currentMessageDR.child("user").setValue(userFirebase.getEmail());
-        //geoBoardRef.child("Messages").child(messageId).child("message").child(currentMessageDetails).child("user").setValue(userFirebase.getEmail());
+
         geoBoardRef.child("Messages").child(messageId).child("title").setValue(title);
         geoBoardRef.child("Messages").child(messageId).child("subject").setValue(subject);
         geoBoardRef.child("Messages").child(messageId).child("location").setValue(location);
@@ -141,38 +153,54 @@ public class MessageDetails extends Application
 
         saveUserDatabase();
 
-        Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Message saved:", Toast.LENGTH_SHORT).show();
     }
 
-    public String getMarkerOnClickSecurityType(double lat, double lng)
+    public void getMarkerOnClickSecurityType(final double lat, final double lng)
     {
         // map marker that was clicked location
-        final String locationSearch = "lat" + lat + "lon" + lng;
-
+        locationSearch = "lat" + lat + "lon" + lng;
         geoBoardRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
-
-
         geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
 
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     // each database location
-                    String databaseLocations = snapshot.child("location").getValue(String.class);
+                    databaseLocations = snapshot.child("location").getValue(String.class);
 
                     // comparing database locations with marker location
-                    if(databaseLocations.equals(locationSearch))
+                    if (databaseLocations.equals(locationSearch))
                     {
-                        messageBoardDetails = snapshot.child("location").getRef().getParent();
-                        messageBoardDetails.addValueEventListener(new ValueEventListener()
+
+                        correctMessageReference = snapshot.child("location").getRef().getParent();
+                        correctMessageReference.addValueEventListener(new ValueEventListener()
                         {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)
                             {
-                                securityType = dataSnapshot.child("securityType").getValue(String.class);
+                                int latStart, latEnd, lonStart, lonEnd;
+                                double databaseLocationsLat, databaseLocationsLon;
+                                String SecurityTypeResult = dataSnapshot.child("securityType").getValue(String.class);
+                                setSecurityType(SecurityTypeResult);
+
+                                latStart = 3;
+                                latEnd = databaseLocations.indexOf('o') - 1;
+                                lonStart = databaseLocations.indexOf('n') + 1;
+                                lonEnd = databaseLocations.length();
+                                databaseLocationsLat = Double.parseDouble(databaseLocations.substring(latStart, latEnd));
+                                databaseLocationsLon = Double.parseDouble(databaseLocations.substring(lonStart, lonEnd));
+
+                                // comparing database locations with marker location
+                                if (!(databaseLocationsLat - lat < 0.05 && databaseLocationsLon - lng < 0.05))
+                                {
+                                    setSecurityType("WrongLocation");
+                                    Toast.makeText(MessageDetails.this, "Wrong Location", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
                             @Override
@@ -181,10 +209,6 @@ public class MessageDetails extends Application
 
                             }
                         });
-                    }
-                    else
-                    {
-                        securityType = "Null value!!!";
                     }
                 }
             }
@@ -195,8 +219,6 @@ public class MessageDetails extends Application
 
             }
         });
-
-        return securityType;
     }
 
     public String getTitle()
@@ -267,5 +289,15 @@ public class MessageDetails extends Application
     public void setNfcId(String nfcId)
     {
         this.nfcId = nfcId;
+    }
+
+    public String getMarkerLocation()
+    {
+        return markerLocation;
+    }
+
+    public void setMarkerLocation(String markerLocation)
+    {
+        this.markerLocation = markerLocation;
     }
 }

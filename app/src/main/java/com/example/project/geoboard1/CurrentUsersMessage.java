@@ -10,51 +10,69 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class CurrentUsersMessage extends AppCompatActivity
 {
     ListView listView;
     TextView messageBoardHeading;
     MessageDetails m;
-    DatabaseReference messageBoardDetails;
-    String msgDetails;
+    ArrayList<String> listViewArray;
     Button addMessageButton;
+    String locationSearch, databaseLocations;
+    DatabaseReference messageDetails, geoBoardRef, correctMessageReference;
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_users_message);
 
-        addMessageButton= (Button)findViewById(R.id.addMessageButton);
+        geoBoardRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages").getRef();
+        addMessageButton= (Button)findViewById(R.id.geoBoardAddButton);
         listView = (ListView) findViewById(R.id.listView);
         messageBoardHeading = (TextView)findViewById(R.id.messageBoardHeading);
         m = (MessageDetails)getApplicationContext();
+
+        // initializes firebase object
+        firebaseAuth = firebaseAuth.getInstance();
 
         setMessageBoardHeading();
         getMessages();
     }
 
-    private void setMessageBoardHeading()
+    public void setMessageBoardHeading()
     {
-        messageBoardDetails = m.messageBoardDetails;
-
-        messageBoardDetails.getParent().addListenerForSingleValueEvent(new ValueEventListener()
+        locationSearch = m.getMarkerLocation();
+        geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                String messageTitle = "";
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
-                    messageTitle = snapshot.child("title").getValue(String.class);
+                    // each database location
+                    databaseLocations = snapshot.child("location").getValue(String.class);
+
+                    // comparing database locations with marker location
+                    if (databaseLocations.equals(locationSearch))
+                    {
+                        correctMessageReference = snapshot.child("location").getRef().getParent();
+                        messageBoardHeading.setText(snapshot.child("title").getValue(String.class));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "wrong location", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                messageBoardHeading.setText(messageTitle);
             }
 
             @Override
@@ -67,10 +85,11 @@ public class CurrentUsersMessage extends AppCompatActivity
 
     private void getMessages()
     {
-        messageBoardDetails = m.messageBoardDetails;
-        DatabaseReference messageDetails = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages/messageId1637048/message");
-
-        messageDetails.addListenerForSingleValueEvent(new ValueEventListener()
+        //String correctMessageRef = findCorrectMessageBoardRef() + "/message";
+        //DatabaseReference messageDetails = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages/" + correctMessageReference);
+        listViewArray = new ArrayList<>();
+        locationSearch = m.getMarkerLocation();
+        geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -78,24 +97,53 @@ public class CurrentUsersMessage extends AppCompatActivity
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     // each database location
-                    msgDetails = snapshot.child("user").getValue(String.class) + "\n\n" + snapshot.child("msg").getValue(String.class);
-                    displayListView();
+                    databaseLocations = snapshot.child("location").getValue(String.class);
+
+                    // comparing database locations with marker location
+                    if (databaseLocations.equals(locationSearch))
+                    {
+                        correctMessageReference = snapshot.child("message").getRef();
+                        m.setCorrectMessageReference(correctMessageReference);
+                        correctMessageReference.addListenerForSingleValueEvent(new ValueEventListener()
+                        {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot)
+                            {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                {
+                                    listViewArray.add(snapshot.child("user").getValue(String.class) + "\n\n" + snapshot.child("msg").getValue(String.class));
+                                    displayListView(listViewArray);
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError)
+                            {
+
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "wrong location", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
-                Toast.makeText(CurrentUsersMessage.this, "Error with database", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
 
-    private void displayListView()
+    private void displayListView(ArrayList<String> listViewArray)
     {
-        String [] listViewArray = {msgDetails};
+        this.listViewArray = listViewArray;
 
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(this, R.layout.single_row_list_view, R.id.textViewUserName, listViewArray);
+        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(this, R.layout.single_row_list_view, R.id.textViewUserName, this.listViewArray);
         listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(listViewAdapter);
     }
@@ -103,6 +151,17 @@ public class CurrentUsersMessage extends AppCompatActivity
     public void addMessageButton(View view)
     {
         finish();
-        startActivity(new Intent(this, AddGeoBoard.class));
+        Intent intent = new Intent(getApplication(), AddGeoBoard.class);
+
+        if(getIntent().resolveActivity(getPackageManager()) != null)
+        {
+            startActivity(intent);
+        }
+    }
+
+    public void backButton(View view)
+    {
+        finish();
+        startActivity(new Intent(this, MapsActivity.class));
     }
 }

@@ -1,49 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_current_users_message"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.project.geoboard1.CurrentUsersMessage">
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.example.project.geoboard1.AppHeaderFragment"
-        android:id="@+id/fragment4"
-        tools:layout="@layout/app_header"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+    <Button
+        android:text="@string/AddMessageButton"
+        android:background="@drawable/my_style_button"
+        android:src="@drawable/wooden_background"
+        android:clickable="true"
+        android:layout_width="200dp"
+        android:layout_height="49dp"
+        android:id="@+id/geoBoardAddButton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:onClick="addMessageButton"
+        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginStart="16dp"/>
+
+    <Button
+        android:text="@string/MapButton"
+        android:background="@drawable/my_style_button"
+        android:src="@drawable/wooden_background"
+        android:clickable="true"
+        android:layout_width="150dp"
+        android:layout_height="49dp"
+        android:id="@+id/mapButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintRight_toLeftOf="@+id/geoBoardAddButton"
+        android:layout_marginEnd="8dp"
+        android:onClick="backButton"/>
 
     <TextView
-        android:layout_marginTop="80dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/messageBoardHeading"
         android:textSize="40sp"
         android:textAlignment="center"
         android:background="@drawable/background_message_image3"
         android:paddingTop="30dp"
-        android:textColor="@color/cardview_dark_background"/>
+        android:textColor="@color/cardview_dark_background"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="parent"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:onClick="addMessageButton"
+        />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_below="@+id/messageBoardHeading"
-        android:layout_alignParentStart="true"
+        android:layout_width="0dp"
         android:id="@+id/listView"
-        android:layout_height="350dp"/>
-
-    <Button
-        android:text="@string/AddMessageButton"
-        android:id="@+id/addMessageButton"
-        android:layout_width="200dp"
-        android:layout_height="49dp"
-        android:background="@drawable/my_style_button"
-        android:src="@drawable/wooden_background"
-        android:clickable="true"
-        android:textSize="22sp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="addMessageButton"/>
-</RelativeLayout>
+        android:layout_height="420dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messageBoardHeading"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginTop="16dp"/>
+</android.support.constraint.ConstraintLayout>
