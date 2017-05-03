@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(firebaseAuth.getCurrentUser() != null)
         {
-            Toast.makeText(this, "came from MainActivity onCreate()", Toast.LENGTH_SHORT).show();
             finish();
             startActivity(new Intent(getApplication(), MapsActivity.class));
         }
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void registerUser()
     {
-        Toast.makeText(this, "button works", Toast.LENGTH_SHORT).show();
 
         // .trim() removes spaces in a string
         String email = editTextEmail.getText().toString().trim();

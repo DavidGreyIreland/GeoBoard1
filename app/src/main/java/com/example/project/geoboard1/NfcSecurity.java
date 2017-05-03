@@ -79,7 +79,6 @@ public class NfcSecurity extends AppCompatActivity
 
         if(i.hasExtra(NfcAdapter.EXTRA_TAG))
         {
-            Toast.makeText(this, "NfcIntent! Security", Toast.LENGTH_SHORT).show();
 
             Tag t = i.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefMessage message = createNdefMessage(createNFCId());
@@ -151,18 +150,14 @@ public class NfcSecurity extends AppCompatActivity
 
             if(t == null)
             {
-                Toast.makeText(this, "Tag object cannot be null", Toast.LENGTH_SHORT).show();
                 return;
             }
 
 
             Ndef ndef = Ndef.get(t);
 
-
             if(t == null)
             {
-                Toast.makeText(this, "Tag is formatting", Toast.LENGTH_SHORT).show();
-
                 formatTag(t, message);
             }
             else
@@ -186,7 +181,6 @@ public class NfcSecurity extends AppCompatActivity
                     m.setSecurityType("NFC");
                     m.saveToDatabase();
 
-                    Toast.makeText(this, "Tag is written Security", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(this, MapsActivity.class));
                 }

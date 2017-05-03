@@ -2,7 +2,7 @@
     <string name="app_name">GeoBoard1</string>
     <string name="radioButtonSecuritySetting1">Security Setting (Location)</string>
     <string name="radioButtonSecuritySetting2">Security Setting (NFC)</string>
-    <string name="radioButtonSecuritySetting3">Security Setting (3)</string>
+    <string name="radioButtonSecuritySetting3">Security Setting (Accelerometer)</string>
     <string name="apply">Apply</string>
     <string name="logout">Logout</string>
     <string name="logo">Logo</string>

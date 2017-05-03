@@ -21,7 +21,9 @@
             android:text="Post title here!"
             android:textSize="20sp"
             android:textAlignment="center"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -31,7 +33,9 @@
             android:text="Post subject here!"
             android:textSize="20sp"
             android:textAlignment="center"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -41,7 +45,9 @@
             android:text="Post location here!"
             android:textSize="20sp"
             android:textAlignment="center"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -70,7 +69,7 @@ public class CurrentUsersMessage extends AppCompatActivity
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), "wrong location", Toast.LENGTH_SHORT).show();
+                        System.out.println("wrong location");
                     }
                 }
             }
@@ -85,8 +84,6 @@ public class CurrentUsersMessage extends AppCompatActivity
 
     private void getMessages()
     {
-        //String correctMessageRef = findCorrectMessageBoardRef() + "/message";
-        //DatabaseReference messageDetails = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages/" + correctMessageReference);
         listViewArray = new ArrayList<>();
         locationSearch = m.getMarkerLocation();
         geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
@@ -113,20 +110,18 @@ public class CurrentUsersMessage extends AppCompatActivity
                                 {
                                     listViewArray.add(snapshot.child("user").getValue(String.class) + "\n\n" + snapshot.child("msg").getValue(String.class));
                                     displayListView(listViewArray);
-
                                 }
                             }
 
                             @Override
                             public void onCancelled(DatabaseError databaseError)
                             {
-
                             }
                         });
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), "wrong location", Toast.LENGTH_SHORT).show();
+                        System.out.println("wrong location");
                     }
                 }
             }

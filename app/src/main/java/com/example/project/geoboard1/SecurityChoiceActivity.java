@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,7 +64,6 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
 
         if(view == buttonLogout)
         {
-            Toast.makeText(this, user.getEmail() + " has logged out!", Toast.LENGTH_SHORT).show();
             firebaseAuth.signOut();
             finish();
             startActivity(new Intent(this, MainActivity.class));
@@ -84,8 +82,6 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
             {
                 finish();
                 MessageDetails m = (MessageDetails)getApplicationContext();
-                //get an instance of the firebaseAuth
-                firebaseAuth = firebaseAuth.getInstance();
                 retrievingBundle = getIntent().getExtras();
                 title = m.getTitle();
                 subject = m.getSubject();
@@ -95,8 +91,6 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
                 m.setSecurityType("NONE");
                 m.saveToDatabase();
 
-
-                Toast.makeText(this, "info saved:", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MapsActivity.class));
             }
             else if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
@@ -106,9 +100,9 @@ public class SecurityChoiceActivity extends AppCompatActivity implements View.On
                 startActivity(i);
                 finish();
             }
-            else if(radioButtonSecurityResult.equals("Security Setting (NFC)"))
+            else if(radioButtonSecurityResult.equals("Security Setting (Accelerometer)"))
             {
-                Intent i = new Intent(getApplicationContext(), NfcSecurity.class);
+                Intent i = new Intent(getApplicationContext(), AccelerometerActivity.class);
 
                 startActivity(i);
                 finish();
