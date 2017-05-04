@@ -41,10 +41,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location location;
     LatLng currentLocation;
     private GoogleMap mMap;
-    private Marker currentLocationMarker;
+    private Marker currentLocationMarker, marker;
     Button buttonLogout;
-    String databaseLocations, markerTitle, dbSecurityType;
-    private DatabaseReference database, geoBoardRef;
+    String markerSecurityType, markerPosition, databaseLocations, markerTitle, dbSecurityType;
+    private DatabaseReference database, geoBoardRef, correctMessageReference;
     private FirebaseAuth firebaseAuth;
     TextView textViewLocation;
     MessageDetails m;
@@ -143,6 +143,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
         database.addListenerForSingleValueEvent(new ValueEventListener()
         {
+            MarkerOptions markerOptions;
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -207,7 +209,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         currentLocation = new LatLng(getLat(), getLon());
         currentLocationMarker = mMap.addMarker(new MarkerOptions()
                 .position(currentLocation)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.person))
+                .title("GeoBoardTitle")
+                .snippet("Click to Open"));
         currentLocationMarker.showInfoWindow();
         mMap.setOnMarkerClickListener(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
@@ -257,7 +261,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         m.setMarkerLocation("lat" + markerLat + "lon" + markerLng);
         // checks if the current location is within range of the desired marker
-        if(markerLat - currentLocationMarker.getPosition().latitude < 0.01 && markerLng - currentLocationMarker.getPosition().longitude < 0.01 )
+        if(markerLat - currentLocationMarker.getPosition().latitude < 0.05 && markerLng - currentLocationMarker.getPosition().longitude < 0.05 )
         {
             geoBoardRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://geoboard1-33349.firebaseio.com/Messages");
             geoBoardRef.addListenerForSingleValueEvent(new ValueEventListener()
@@ -316,12 +320,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startActivity(i);
             finish();
         }
-        else if(securityType.equals("Location"))
-        {
-            finish();
-            startActivity(new Intent(getApplication(), MapsActivity.class));
-            Toast.makeText(this, "Location Access Incorrect!!!", Toast.LENGTH_SHORT).show();
-        }
         else if(securityType.equals("WrongLocation"))
         {
             finish();
@@ -358,6 +356,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(view == buttonLogout)
         {
+            Toast.makeText(this, user.getEmail() + " has logged out!", Toast.LENGTH_SHORT).show();
             firebaseAuth.signOut();
             finish();
             startActivity(new Intent(this, MainActivity.class));
